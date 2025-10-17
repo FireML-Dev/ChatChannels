@@ -27,8 +27,12 @@ public record Messaging(ChatChannel channel) {
             if (targetPlayers.isEmpty()) {
                 return;
             }
-            message.replace("{message}", event.message()).send(Bukkit.getConsoleSender());
+            message.replace("{message}", event.message()).send(sender, Bukkit.getConsoleSender());
             targetPlayers.get().forEach(player -> {
+                // Don't send to sender
+                if (player.equals(sender)) {
+                    return;
+                }
                 // Check if the message should be sent
                 if (!channel.shouldSendToTarget(sender, player)) {
                     return;
