@@ -43,7 +43,7 @@ public record PlayerData(Player player) {
     }
 
     public void resetActiveChannel() {
-        this.player.getPersistentDataContainer().remove(CHANNEL_KEY);
+        setActiveChannel(ChatChannelRegistry.getInstance().getGlobalChat());
     }
 
 }

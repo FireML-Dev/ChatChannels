@@ -1,11 +1,14 @@
 package uk.firedev.chatchannels.channels;
 
+import io.papermc.paper.event.player.AsyncChatEvent;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import uk.firedev.chatchannels.ChatChannels;
 import uk.firedev.chatchannels.api.ChatChannel;
 import uk.firedev.daisylib.libs.messagelib.message.ComponentMessage;
 import uk.firedev.daisylib.libs.messagelib.message.ComponentSingleMessage;
+import uk.firedev.daisylib.libs.messagelib.replacer.Replacer;
 
 public class GlobalChat extends ChatChannel {
 
@@ -30,6 +33,12 @@ public class GlobalChat extends ChatChannel {
     @Override
     public boolean shouldSendToTarget(@NotNull Player player, @NotNull Player target) {
         return true;
+    }
+
+    @Nullable
+    @Override
+    public Replacer replacer(@NotNull AsyncChatEvent event) {
+        return null;
     }
 
 }

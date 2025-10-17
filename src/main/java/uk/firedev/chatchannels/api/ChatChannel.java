@@ -6,12 +6,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import uk.firedev.chatchannels.ChatChannels;
+import uk.firedev.chatchannels.configs.MessageConfig;
 import uk.firedev.chatchannels.data.PlayerData;
 import uk.firedev.daisylib.command.CooldownHelper;
 import uk.firedev.daisylib.config.ConfigBase;
 import uk.firedev.daisylib.libs.messagelib.message.ComponentMessage;
 import uk.firedev.daisylib.libs.messagelib.message.ComponentSingleMessage;
+import uk.firedev.daisylib.libs.messagelib.replacer.Replacer;
 
 public abstract class ChatChannel extends ConfigBase {
 
@@ -67,11 +68,14 @@ public abstract class ChatChannel extends ConfigBase {
             return;
         }
         ComponentSingleMessage message = format().parsePlaceholderAPI(sender)
-            .replace("{name}", sender.name());
+            .replace("{name}", sender.name())
+            .replace(replacer(event));
         new Messaging(this).sendMessage(sender, event, message);
     }
 
     public abstract boolean shouldSendToTarget(@NotNull Player player, @NotNull Player target);
+
+    public abstract @Nullable Replacer replacer(@NotNull AsyncChatEvent event);
 
     public boolean hasAccess(@NotNull Player player) {
         String access = accessPermission();
