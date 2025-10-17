@@ -50,4 +50,9 @@ public class MessageConfig extends ConfigBase {
             .replace(getPrefixReplacer());
     }
 
+    public @NotNull ComponentMessage getNoAccessMessage() {
+        return getComponentMessage("no-access", "{prefix}<red>You cannot access that channel!")
+            .replace(getPrefixReplacer());
+    }
+
 }

@@ -62,8 +62,8 @@ public abstract class ChatChannel extends ConfigBase {
     public void handleEvent(@NotNull AsyncChatEvent event) {
         Player sender = event.getPlayer();
         if (!hasAccess(sender)) {
+            MessageConfig.getInstance().getNoAccessMessage().send(sender);
             new PlayerData(sender).resetActiveChannel();
-            event.setCancelled(false);
             return;
         }
         ComponentSingleMessage message = format().parsePlaceholderAPI(sender)
