@@ -1,3 +1,4 @@
+import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
 import net.minecrell.pluginyml.paper.PaperPluginDescription
 
 plugins {
@@ -21,24 +22,36 @@ dependencies {
 
 group = "uk.firedev"
 version = properties["project-version"] as String
-description = "Template Plugin"
+description = "A library that allows external plugins to register custom chat channels"
 java.sourceCompatibility = JavaVersion.VERSION_21
 
 paper {
     name = project.name
     version = project.version.toString()
-    main = "uk.firedev.plugintemplate.PluginTemplate"
-    apiVersion = "1.21.4"
+    main = "uk.firedev.chatchannels.ChatChannels"
+    apiVersion = "1.21.10"
     author = "FireML"
     description = project.description.toString()
 
-    loader = "uk.firedev.plugintemplate.LibraryLoader"
+    loader = "uk.firedev.chatchannels.LibraryLoader"
     generateLibrariesJson = true
 
     serverDependencies {
-        register("DaisyLib") {
+            register("DaisyLib") {
             required = true
             load = PaperPluginDescription.RelativeLoadOrder.BEFORE
+        }
+    }
+
+    permissions {
+        register("chatchannels.command") {
+            default = BukkitPluginDescription.Permission.Default.OP
+        }
+        register("chatchannel.global") {
+            default = BukkitPluginDescription.Permission.Default.TRUE
+        }
+        register("chatchannel.local") {
+            default = BukkitPluginDescription.Permission.Default.TRUE
         }
     }
 }
@@ -81,5 +94,8 @@ tasks {
     }
     withType<JavaCompile> {
         options.encoding = "UTF-8"
+    }
+    generatePaperPluginDescription {
+        useGoogleMavenCentralProxy()
     }
 }
