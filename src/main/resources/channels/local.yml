@@ -11,6 +11,9 @@ format: "<color:#DAA520>[Local]</color> <white>{name} ➻ {message}</white>"
 # The permission to access the channel.
 access-permission: chatchannel.local
 
+# The distance players must be within to see each other's messages.
+radius: 50
+
 # Controls chat pinging
 ping:
   # Should pinging be enabled?
