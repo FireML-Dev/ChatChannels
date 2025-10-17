@@ -3,6 +3,7 @@ package uk.firedev.chatchannels.api;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.sound.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import uk.firedev.chatchannels.ChatChannels;
@@ -16,8 +17,8 @@ public abstract class ChatChannel extends ConfigBase {
 
     protected final CooldownHelper pingCooldown = CooldownHelper.create();
 
-    public ChatChannel(@NotNull String fileName) {
-        super(fileName, fileName, ChatChannels.getInstance());
+    public ChatChannel(@NotNull String fileName, @NotNull Plugin plugin) {
+        super(fileName, fileName, plugin);
         init();
     }
 

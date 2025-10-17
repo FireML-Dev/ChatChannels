@@ -2,6 +2,7 @@ package uk.firedev.chatchannels.channels;
 
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import uk.firedev.chatchannels.ChatChannels;
 import uk.firedev.chatchannels.api.ChatChannel;
 import uk.firedev.daisylib.libs.messagelib.message.ComponentMessage;
 import uk.firedev.daisylib.libs.messagelib.message.ComponentSingleMessage;
@@ -9,7 +10,7 @@ import uk.firedev.daisylib.libs.messagelib.message.ComponentSingleMessage;
 public class GlobalChat extends ChatChannel {
 
     public GlobalChat() {
-        super("channels/global.yml");
+        super("channels/global.yml", ChatChannels.getInstance());
     }
 
     @NotNull
