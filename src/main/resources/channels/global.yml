@@ -8,6 +8,13 @@ display: <gold>Global
 # How should messages in this channel be formatted?
 format: "<color:#00fb9a>[Global]</color> <white>{name} ➻ {message}</white>"
 
+# Which commands should be used as a shortcut to enter this channel?
+# This requires a server restart to take effect.
+commands:
+  - global
+  - g
+  - gc
+
 # The permission to access the channel.
 access-permission: chatchannel.global
 

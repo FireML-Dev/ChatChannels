@@ -10,17 +10,24 @@ import uk.firedev.chatchannels.configs.MessageConfig;
 import uk.firedev.chatchannels.data.PlayerData;
 import uk.firedev.daisylib.command.CooldownHelper;
 import uk.firedev.daisylib.config.ConfigBase;
+import uk.firedev.daisylib.libs.commandapi.CommandTree;
 import uk.firedev.daisylib.libs.messagelib.message.ComponentMessage;
 import uk.firedev.daisylib.libs.messagelib.message.ComponentSingleMessage;
 import uk.firedev.daisylib.libs.messagelib.replacer.Replacer;
+
+import java.util.List;
 
 public abstract class ChatChannel extends ConfigBase {
 
     protected final CooldownHelper pingCooldown = CooldownHelper.create();
 
+    private final List<String> commandAliases;
+
     public ChatChannel(@NotNull String fileName, @NotNull Plugin plugin) {
         super(fileName, fileName, plugin);
         init();
+        this.commandAliases = getConfig().getStringList("commands");
+        registerAliases();
     }
 
     public boolean isEnabled() {
@@ -28,6 +35,10 @@ public abstract class ChatChannel extends ConfigBase {
     }
 
     public abstract @NotNull String name();
+
+    public final @NotNull Plugin plugin() {
+        return getPlugin();
+    }
 
     public @NotNull ComponentSingleMessage display() {
         return ComponentMessage.componentMessage(getConfig().getString("display", name()));
@@ -80,6 +91,19 @@ public abstract class ChatChannel extends ConfigBase {
     public boolean hasAccess(@NotNull Player player) {
         String access = accessPermission();
         return access == null || player.hasPermission(access);
+    }
+
+    private void registerAliases() {
+        this.commandAliases.forEach(this::registerAlias);
+    }
+
+    private void registerAlias(@NotNull String alias) {
+        new CommandTree(alias)
+            .withPermission(accessPermission())
+            .executesPlayer(info -> {
+                new PlayerData(info.sender()).setActiveChannel(this);
+            })
+            .register(plugin().namespace());
     }
 
 }
