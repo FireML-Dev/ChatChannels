@@ -21,13 +21,13 @@ public record Messaging(ChatChannel channel) {
         this.channel = channel;
     }
 
-    public void sendMessage(@NotNull Player sender, @NotNull AsyncChatEvent event, @NotNull ComponentSingleMessage message) {
+    public void sendMessage(@NotNull Player sender, @NotNull Component sentMessage, @NotNull ComponentSingleMessage message) {
         Bukkit.getScheduler().runTask(ChatChannels.getInstance(), () -> {
             Optional<List<Player>> targetPlayers = handleRadius(sender);
             if (targetPlayers.isEmpty()) {
                 return;
             }
-            message.replace("{message}", event.message()).send(sender, Bukkit.getConsoleSender());
+            message.replace("{message}", sentMessage).send(sender, Bukkit.getConsoleSender());
             targetPlayers.get().forEach(player -> {
                 // Don't send to sender
                 if (player.equals(sender)) {
@@ -38,7 +38,7 @@ public record Messaging(ChatChannel channel) {
                     return;
                 }
                 // Checks for mentions/pings
-                Component messageContent = processPing(player, event.message());
+                Component messageContent = processPing(player, sentMessage);
                 message.replace("{message}", messageContent).send(player);
             });
         });

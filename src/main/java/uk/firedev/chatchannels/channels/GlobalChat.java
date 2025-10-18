@@ -37,7 +37,7 @@ public class GlobalChat extends ChatChannel {
 
     @Nullable
     @Override
-    public Replacer replacer(@NotNull AsyncChatEvent event) {
+    public Replacer replacer(@NotNull Player player) {
         return null;
     }
 

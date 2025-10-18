@@ -9,6 +9,7 @@ import uk.firedev.chatchannels.ChatChannels;
 import uk.firedev.chatchannels.api.ChatChannel;
 import uk.firedev.chatchannels.configs.MessageConfig;
 import uk.firedev.chatchannels.registry.ChatChannelRegistry;
+import uk.firedev.daisylib.libs.commandapi.CommandAPI;
 
 public record PlayerData(Player player) {
 
@@ -40,6 +41,7 @@ public record PlayerData(Player player) {
     public void setActiveChannel(@NotNull ChatChannel channel) {
         this.player.getPersistentDataContainer().set(CHANNEL_KEY, PersistentDataType.STRING, channel.name());
         MessageConfig.getInstance().getJoinChannelMessage(channel).send(this.player);
+        CommandAPI.updateRequirements(this.player);
     }
 
     public void resetActiveChannel() {

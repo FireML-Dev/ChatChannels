@@ -2,6 +2,7 @@ package uk.firedev.chatchannels.api;
 
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.sound.Sound;
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -11,11 +12,13 @@ import uk.firedev.chatchannels.data.PlayerData;
 import uk.firedev.daisylib.command.CooldownHelper;
 import uk.firedev.daisylib.config.ConfigBase;
 import uk.firedev.daisylib.libs.commandapi.CommandTree;
+import uk.firedev.daisylib.libs.commandapi.arguments.GreedyStringArgument;
 import uk.firedev.daisylib.libs.messagelib.message.ComponentMessage;
 import uk.firedev.daisylib.libs.messagelib.message.ComponentSingleMessage;
 import uk.firedev.daisylib.libs.messagelib.replacer.Replacer;
 
 import java.util.List;
+import java.util.Objects;
 
 public abstract class ChatChannel extends ConfigBase {
 
@@ -78,15 +81,19 @@ public abstract class ChatChannel extends ConfigBase {
             new PlayerData(sender).resetActiveChannel();
             return;
         }
+        sendMessage(sender, event.message());
+    }
+
+    public void sendMessage(@NotNull Player sender, @NotNull Component component) {
         ComponentSingleMessage message = format().parsePlaceholderAPI(sender)
             .replace("{name}", sender.name())
-            .replace(replacer(event));
-        new Messaging(this).sendMessage(sender, event, message);
+            .replace(replacer(sender));
+        new Messaging(this).sendMessage(sender, component, message);
     }
 
     public abstract boolean shouldSendToTarget(@NotNull Player player, @NotNull Player target);
 
-    public abstract @Nullable Replacer replacer(@NotNull AsyncChatEvent event);
+    public abstract @Nullable Replacer replacer(@NotNull Player player);
 
     public boolean hasAccess(@NotNull Player player) {
         String access = accessPermission();
@@ -99,7 +106,22 @@ public abstract class ChatChannel extends ConfigBase {
 
     private void registerAlias(@NotNull String alias) {
         new CommandTree(alias)
-            .withPermission(accessPermission())
+            .withRequirement(sender -> {
+                if (!(sender instanceof Player player)) {
+                    return false;
+                }
+                return hasAccess(player);
+            })
+            .then(
+                new GreedyStringArgument("message")
+                    .executesPlayer(info -> {
+                        String message = Objects.requireNonNull(info.args().getUnchecked("message"));
+                        sendMessage(
+                            info.sender(),
+                            ComponentMessage.componentMessage(message).get()
+                        );
+                    })
+            )
             .executesPlayer(info -> {
                 new PlayerData(info.sender()).setActiveChannel(this);
             })
