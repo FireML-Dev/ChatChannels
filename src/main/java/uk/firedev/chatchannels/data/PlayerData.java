@@ -35,7 +35,12 @@ public record PlayerData(Player player) {
             return ChatChannelRegistry.getInstance().getGlobalChat();
         }
         ChatChannel channel = ChatChannelRegistry.getInstance().getChatChannel(channelStr);
-        return channel == null ? ChatChannelRegistry.getInstance().getGlobalChat() : channel;
+        if (channel == null) {
+            MessageConfig.getInstance().getNoLongerExistsMessage().send(this.player);
+            resetActiveChannel();
+            return ChatChannelRegistry.getInstance().getGlobalChat();
+        }
+        return channel;
     }
 
     public void setActiveChannel(@NotNull ChatChannel channel) {

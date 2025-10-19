@@ -55,4 +55,9 @@ public class MessageConfig extends ConfigBase {
             .replace(getPrefixReplacer());
     }
 
+    public @NotNull ComponentMessage getNoLongerExistsMessage() {
+        return getComponentMessage("no-longer-exists", "{prefix}<red>The channel you were in no longer exists.")
+            .replace(getPrefixReplacer());
+    }
+
 }
