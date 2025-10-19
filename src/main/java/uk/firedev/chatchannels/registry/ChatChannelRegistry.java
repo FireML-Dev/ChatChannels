@@ -6,6 +6,7 @@ import uk.firedev.chatchannels.ChatChannels;
 import uk.firedev.chatchannels.api.ChatChannel;
 import uk.firedev.chatchannels.channels.GlobalChat;
 import uk.firedev.chatchannels.channels.LocalChat;
+import uk.firedev.daisylib.Loggers;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -32,9 +33,11 @@ public class ChatChannelRegistry {
     public void register(@NotNull ChatChannel channel, boolean force) {
         String name = channel.name();
         if (!force && registry.containsKey(name)) {
+            Loggers.warn(ChatChannels.getInstance().getComponentLogger(), "Attempted to register already existing ChatChannel: " + name);
             return;
         }
         registry.put(name, channel);
+        Loggers.info(ChatChannels.getInstance().getComponentLogger(), "Registered ChatChannel " + name + " from " + channel.plugin().getName());
     }
 
     public boolean isEmpty() {
