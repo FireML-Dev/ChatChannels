@@ -1,10 +1,10 @@
 prefix: "<gray>[ChatChannels]</gray> "
 
-join-channel: "{prefix}<aqua>You are now speaking in <gold>{channel}</gold> Chat."
+join-channel: "{prefix}<#F0E68C>You are now speaking in <gold>{channel}</gold> Chat."
 no-nearby-players: "{prefix}<red>There are no players within range."
 no-access: "{prefix}<red>You cannot access that channel!"
 no-longer-exists: "{prefix}<red>The channel you were in no longer exists."
-reloaded: "{prefix}<aqua>Successfully reloaded the plugin."
+reloaded: "{prefix}<#F0E68C>Successfully reloaded the plugin."
 
 # DO NOT TOUCH THIS VALUE!!!
 config-version: 3
