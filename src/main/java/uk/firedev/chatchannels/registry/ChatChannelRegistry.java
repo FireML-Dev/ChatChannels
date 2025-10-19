@@ -30,9 +30,6 @@ public class ChatChannelRegistry {
     }
 
     public void register(@NotNull ChatChannel channel, boolean force) {
-        if (!channel.isEnabled()) {
-            return;
-        }
         String name = channel.name();
         if (!force && registry.containsKey(name)) {
             return;

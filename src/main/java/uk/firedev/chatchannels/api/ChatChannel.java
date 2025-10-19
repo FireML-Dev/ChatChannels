@@ -96,6 +96,9 @@ public abstract class ChatChannel extends ConfigBase {
     public abstract @Nullable Replacer replacer(@NotNull Player player);
 
     public boolean hasAccess(@NotNull Player player) {
+        if (!isEnabled()) {
+            return false;
+        }
         String access = accessPermission();
         return access == null || player.hasPermission(access);
     }
