@@ -1,5 +1,6 @@
 package uk.firedev.chatchannels.channels;
 
+import io.papermc.paper.event.player.AsyncChatEvent;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -38,6 +39,15 @@ public class GlobalChat extends ChatChannel {
     @Override
     public Replacer replacer(@NotNull Player player) {
         return null;
+    }
+
+    @Override
+    public void handleEvent(@NotNull AsyncChatEvent event) {
+        if (!isEnabled()) {
+            event.setCancelled(false);
+            return;
+        }
+        super.handleEvent(event);
     }
 
 }

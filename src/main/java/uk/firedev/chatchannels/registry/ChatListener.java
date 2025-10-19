@@ -4,6 +4,7 @@ import io.papermc.paper.event.player.AsyncChatEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import uk.firedev.chatchannels.api.ChatChannel;
 import uk.firedev.chatchannels.data.PlayerData;
 
 public class ChatListener implements Listener {
@@ -13,9 +14,9 @@ public class ChatListener implements Listener {
         if (ChatChannelRegistry.getInstance().isEmpty()) {
             return;
         }
-        PlayerData data = new PlayerData(event.getPlayer());
+        ChatChannel channel = new PlayerData(event.getPlayer()).getActiveChannel();
         event.setCancelled(true);
-        data.getActiveChannel().handleEvent(event);
+        channel.handleEvent(event);
     }
 
 }
