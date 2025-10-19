@@ -9,6 +9,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import uk.firedev.chatchannels.configs.MessageConfig;
 import uk.firedev.chatchannels.data.PlayerData;
+import uk.firedev.daisylib.addons.requirement.Requirement;
+import uk.firedev.daisylib.addons.requirement.RequirementData;
 import uk.firedev.daisylib.command.CooldownHelper;
 import uk.firedev.daisylib.config.ConfigBase;
 import uk.firedev.daisylib.libs.commandapi.CommandTree;
@@ -25,9 +27,11 @@ public abstract class ChatChannel extends ConfigBase {
     protected final CooldownHelper pingCooldown = CooldownHelper.create();
 
     private final List<String> commandAliases;
+    private @NotNull Requirement accessRequirement;
 
     public ChatChannel(@NotNull String fileName, @NotNull Plugin plugin) {
         super(fileName, fileName, plugin);
+        // init performs a reload.
         init();
         this.commandAliases = getConfig().getStringList("commands");
         registerAliases();
@@ -35,6 +39,13 @@ public abstract class ChatChannel extends ConfigBase {
 
     public boolean isEnabled() {
         return getConfig().getBoolean("enabled", true);
+    }
+
+    @Override
+    public void reload() {
+        super.reload();
+        // Cache the accessRequirement so we don't need to rebuild it every time we need it.
+        this.accessRequirement = new Requirement(getConfig().getConfigurationSection("requirements"), plugin());
     }
 
     public abstract @NotNull String name();
@@ -59,8 +70,8 @@ public abstract class ChatChannel extends ConfigBase {
         return getConfig().getInt("ping.cooldown");
     }
 
-    public @Nullable String accessPermission() {
-        return getConfig().getString("access-permission");
+    public @NotNull Requirement accessRequirement() {
+        return accessRequirement;
     }
 
     public abstract @NotNull ComponentSingleMessage defaultFormat();
@@ -99,8 +110,9 @@ public abstract class ChatChannel extends ConfigBase {
         if (!isEnabled()) {
             return false;
         }
-        String access = accessPermission();
-        return access == null || player.hasPermission(access);
+        return accessRequirement().meetsRequirements(
+            new RequirementData().withPlayer(player)
+        );
     }
 
     private void registerAliases() {

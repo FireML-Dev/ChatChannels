@@ -14,8 +14,9 @@ commands:
   - l
   - lc
 
-# The permission to access the channel.
-access-permission: chatchannel.local
+# The requirements to access the channel.
+requirements:
+  - "PERMISSION:chatchannel.local"
 
 # The distance players must be within to see each other's messages.
 radius: 50

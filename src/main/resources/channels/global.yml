@@ -14,8 +14,9 @@ commands:
   - g
   - gc
 
-# The permission to access the channel.
-access-permission: chatchannel.global
+# The requirements to access the channel.
+requirements:
+  - "PERMISSION:chatchannel.global"
 
 # Controls chat pinging
 ping:
