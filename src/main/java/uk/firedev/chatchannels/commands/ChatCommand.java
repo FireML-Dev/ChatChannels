@@ -1,7 +1,9 @@
 package uk.firedev.chatchannels.commands;
 
 import uk.firedev.chatchannels.api.ChatChannel;
+import uk.firedev.chatchannels.api.Messaging;
 import uk.firedev.chatchannels.commands.arguments.ChatChannelArgument;
+import uk.firedev.chatchannels.configs.MessageConfig;
 import uk.firedev.chatchannels.data.PlayerData;
 import uk.firedev.daisylib.libs.commandapi.CommandTree;
 
@@ -18,6 +20,10 @@ public class ChatCommand {
                 ChatChannelArgument.get()
                     .executesPlayer(info -> {
                         ChatChannel channel = Objects.requireNonNull(info.args().getUnchecked("channel"));
+                        if (!channel.isEnabled() || !channel.hasAccess(info.sender())) {
+                            MessageConfig.getInstance().getNoAccessMessage().send(info.sender());
+                            return;
+                        }
                         new PlayerData(info.sender()).setActiveChannel(channel);
                     })
             );
