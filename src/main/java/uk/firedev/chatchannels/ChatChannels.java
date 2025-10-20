@@ -1,11 +1,13 @@
 package uk.firedev.chatchannels;
 
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import uk.firedev.chatchannels.commands.ChatCommand;
 import uk.firedev.chatchannels.commands.MainCommand;
 import uk.firedev.chatchannels.configs.MessageConfig;
 import uk.firedev.chatchannels.registry.ChatChannelRegistry;
+import uk.firedev.daisylib.libs.commandapi.CommandAPI;
 
 public final class ChatChannels extends JavaPlugin {
 
@@ -42,6 +44,7 @@ public final class ChatChannels extends JavaPlugin {
     public void reload() {
         MessageConfig.getInstance().reload();
         ChatChannelRegistry.getInstance().reload();
+        Bukkit.getOnlinePlayers().forEach(CommandAPI::updateRequirements);
     }
 
 }

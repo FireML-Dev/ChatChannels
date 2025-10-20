@@ -43,7 +43,7 @@ public class GlobalChat extends ChatChannel {
 
     @Override
     public void handleEvent(@NotNull AsyncChatEvent event) {
-        if (!isEnabled()) {
+        if (!isEnabled() || !hasAccess(event.getPlayer())) {
             event.setCancelled(false);
             return;
         }
