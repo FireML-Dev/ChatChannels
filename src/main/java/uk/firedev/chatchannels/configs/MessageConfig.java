@@ -8,8 +8,6 @@ import uk.firedev.daisylib.libs.messagelib.message.ComponentMessage;
 import uk.firedev.daisylib.libs.messagelib.message.ComponentSingleMessage;
 import uk.firedev.daisylib.libs.messagelib.replacer.Replacer;
 
-import java.nio.channels.Channel;
-
 public class MessageConfig extends ConfigBase {
 
     private static final MessageConfig instance = new MessageConfig();

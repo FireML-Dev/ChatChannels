@@ -1,6 +1,5 @@
 package uk.firedev.chatchannels.api;
 
-import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
