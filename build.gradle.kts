@@ -9,6 +9,8 @@ plugins {
 }
 
 repositories {
+    // For testing experimental DaisyLib features
+    mavenLocal()
     mavenCentral()
     gradlePluginPortal()
     maven("https://repo.papermc.io/repository/maven-public/")
@@ -18,6 +20,8 @@ repositories {
 dependencies {
     compileOnly(libs.paper.api)
     compileOnly(libs.daisylib)
+
+    implementation(libs.commandapi)
 }
 
 group = "uk.firedev"
@@ -91,6 +95,8 @@ tasks {
         archiveBaseName.set(project.name)
         archiveVersion.set(project.version.toString())
         archiveClassifier.set("")
+
+        relocate("dev.jorel.commandapi", "uk.firedev.chatchannels.libs.commandapi")
     }
     withType<JavaCompile> {
         options.encoding = "UTF-8"

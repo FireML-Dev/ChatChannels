@@ -2,9 +2,9 @@ package uk.firedev.chatchannels.commands;
 
 import uk.firedev.chatchannels.ChatChannels;
 import uk.firedev.chatchannels.configs.MessageConfig;
-import uk.firedev.daisylib.libs.commandapi.CommandTree;
-import uk.firedev.daisylib.libs.commandapi.arguments.Argument;
-import uk.firedev.daisylib.libs.commandapi.arguments.LiteralArgument;
+import dev.jorel.commandapi.CommandTree;
+import dev.jorel.commandapi.arguments.Argument;
+import dev.jorel.commandapi.arguments.LiteralArgument;
 
 public class MainCommand {
 

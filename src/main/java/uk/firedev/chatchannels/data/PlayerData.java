@@ -9,7 +9,7 @@ import uk.firedev.chatchannels.ChatChannels;
 import uk.firedev.chatchannels.api.ChatChannel;
 import uk.firedev.chatchannels.configs.MessageConfig;
 import uk.firedev.chatchannels.registry.ChatChannelRegistry;
-import uk.firedev.daisylib.libs.commandapi.CommandAPI;
+import dev.jorel.commandapi.CommandAPI;
 
 public record PlayerData(Player player) {
 

@@ -4,7 +4,7 @@ import uk.firedev.chatchannels.api.ChatChannel;
 import uk.firedev.chatchannels.commands.arguments.ChatChannelArgument;
 import uk.firedev.chatchannels.configs.MessageConfig;
 import uk.firedev.chatchannels.data.PlayerData;
-import uk.firedev.daisylib.libs.commandapi.CommandTree;
+import dev.jorel.commandapi.CommandTree;
 
 import java.util.Objects;
 

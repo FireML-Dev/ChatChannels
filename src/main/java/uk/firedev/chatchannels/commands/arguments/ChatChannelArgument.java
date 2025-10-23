@@ -1,12 +1,15 @@
 package uk.firedev.chatchannels.commands.arguments;
 
+import com.mojang.brigadier.builder.ArgumentBuilder;
+import dev.jorel.commandapi.arguments.ArgumentSuggestions;
 import org.bukkit.entity.Player;
 import uk.firedev.chatchannels.api.ChatChannel;
 import uk.firedev.chatchannels.registry.ChatChannelRegistry;
-import uk.firedev.daisylib.command.ArgumentBuilder;
-import uk.firedev.daisylib.libs.commandapi.arguments.Argument;
-import uk.firedev.daisylib.libs.commandapi.arguments.CustomArgument;
-import uk.firedev.daisylib.libs.commandapi.arguments.StringArgument;
+import dev.jorel.commandapi.arguments.Argument;
+import dev.jorel.commandapi.arguments.CustomArgument;
+import dev.jorel.commandapi.arguments.StringArgument;
+
+import java.util.concurrent.CompletableFuture;
 
 public class ChatChannelArgument {
 
@@ -20,16 +23,18 @@ public class ChatChannelArgument {
             }
             return channel;
         }).includeSuggestions(
-            ArgumentBuilder.getAsyncSuggestions(info ->
-                ChatChannelRegistry.getInstance().getRegistry().values().stream()
-                    .filter(channel -> {
-                        if (!(info.sender() instanceof Player player)) {
-                            return true;
-                        }
-                        return channel.hasAccess(player);
-                    })
-                    .map(ChatChannel::name)
-                    .toArray(String[]::new)
+            ArgumentSuggestions.stringsAsync(info ->
+                CompletableFuture.supplyAsync(() ->
+                    ChatChannelRegistry.getInstance().getRegistry().values().stream()
+                        .filter(channel -> {
+                            if (!(info.sender() instanceof Player player)) {
+                                return true;
+                            }
+                            return channel.hasAccess(player);
+                        })
+                        .map(ChatChannel::name)
+                        .toArray(String[]::new)
+                )
             )
         );
     }
