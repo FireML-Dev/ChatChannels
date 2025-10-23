@@ -10,7 +10,7 @@ plugins {
 
 repositories {
     // For testing experimental DaisyLib features
-    mavenLocal()
+    //mavenLocal()
     mavenCentral()
     gradlePluginPortal()
     maven("https://repo.papermc.io/repository/maven-public/")
