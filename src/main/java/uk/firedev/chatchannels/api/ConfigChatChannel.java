@@ -18,16 +18,15 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Used for fetching chat channels from the channels config folder.
+ * Used for fetching chat channels from the config files.
  */
-@ApiStatus.Internal
 public class ConfigChatChannel extends ConfigBase implements ChatChannel {
 
     protected final CooldownHelper pingCooldown = CooldownHelper.create();
 
     private final @NotNull String id;
     private final List<String> commandAliases;
-    private @NotNull Requirement accessRequirement = new Requirement(plugin());
+    private final @NotNull Requirement accessRequirement;
 
     public ConfigChatChannel(@NotNull File file, @NotNull Plugin plugin) throws ChannelLoadException {
         super(file, null, plugin);
@@ -35,6 +34,7 @@ public class ConfigChatChannel extends ConfigBase implements ChatChannel {
         init();
         this.id = checkId();
         this.commandAliases = getConfig().getStringList("commands");
+        this.accessRequirement = new Requirement(getConfig().getConfigurationSection("requirements"), plugin);
     }
 
     private @NotNull String checkId() throws ChannelLoadException {
