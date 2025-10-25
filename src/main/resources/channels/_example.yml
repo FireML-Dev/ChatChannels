@@ -1,0 +1,35 @@
+# The identifier for this channel. This is required.
+id: example
+
+# Controls whether this channel is enabled.
+enabled: false
+
+# How should this channel be displayed in placeholders and messages?
+display: <aqua>Example
+
+# How should messages in this channel be formatted?
+format: "<aqua>[Example]</aqua> <white>{name} ➻ {message}</white>"
+
+# Which commands should be used as a shortcut to enter this channel?
+# This requires a server restart to take effect.
+commands:
+  - exa
+  - example
+
+# The requirements to access the channel.
+# See `/daisylib list requirementTypes` for valid requirements.
+requirements:
+  - "PERMISSION:chatchannel.example"
+
+# Controls chat pinging
+ping:
+  # Should pinging be enabled?
+  enable: true
+  # How long should the cooldown between pings be? (in seconds)
+  cooldown: 10
+  # What sound should it make?
+  # You can get the sound key from the /playsound command.
+  sound:
+    sound: entity.experience_orb.pickup
+    volume: 3
+    pitch: 1

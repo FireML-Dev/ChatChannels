@@ -7,6 +7,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import uk.firedev.chatchannels.commands.ChatCommand;
 import uk.firedev.chatchannels.commands.MainCommand;
+import uk.firedev.chatchannels.configs.MainConfig;
 import uk.firedev.chatchannels.configs.MessageConfig;
 import uk.firedev.chatchannels.registry.ChatChannelRegistry;
 
@@ -39,6 +40,7 @@ public final class ChatChannels extends JavaPlugin {
     @Override
     public void onEnable() {
         CommandAPI.onEnable();
+        MainConfig.getInstance().init();
         MessageConfig.getInstance().init();
         MainCommand.getCommand().register(this);
         ChatChannelRegistry.getInstance().init(this);
@@ -49,6 +51,7 @@ public final class ChatChannels extends JavaPlugin {
     public void onDisable() {}
 
     public void reload() {
+        MainConfig.getInstance().reload();
         MessageConfig.getInstance().reload();
         ChatChannelRegistry.getInstance().reload();
         Bukkit.getOnlinePlayers().forEach(CommandAPI::updateRequirements);

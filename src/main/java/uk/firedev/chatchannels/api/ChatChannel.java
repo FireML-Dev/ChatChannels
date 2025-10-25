@@ -9,22 +9,30 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import uk.firedev.chatchannels.ChatChannels;
 import uk.firedev.chatchannels.configs.MessageConfig;
 import uk.firedev.chatchannels.data.PlayerData;
+import uk.firedev.daisylib.Loggers;
 import uk.firedev.daisylib.addons.requirement.Requirement;
 import uk.firedev.daisylib.addons.requirement.RequirementData;
 import uk.firedev.daisylib.command.CooldownHelper;
 import uk.firedev.daisylib.libs.messagelib.message.ComponentMessage;
 import uk.firedev.daisylib.libs.messagelib.message.ComponentSingleMessage;
 import uk.firedev.daisylib.libs.messagelib.replacer.Replacer;
+import uk.firedev.daisylib.registry.RegistryItem;
 
+import java.util.List;
 import java.util.Objects;
 
-public interface ChatChannel {
+public interface ChatChannel extends RegistryItem {
 
     boolean isEnabled();
 
     @NotNull String name();
+
+    default @NotNull String getKey() {
+        return name();
+    }
 
     @NotNull Plugin plugin();
 
@@ -65,8 +73,6 @@ public interface ChatChannel {
 
     @NotNull CooldownHelper pingCooldownHandler();
 
-    void reload();
-
     default boolean hasAccess(@NotNull Player player) {
         if (!isEnabled()) {
             return false;
@@ -76,7 +82,18 @@ public interface ChatChannel {
         );
     }
 
-    default void registerAlias(@NotNull String alias) {
+    @NotNull List<String> aliases();
+
+    default void registerAliases() {
+        List<String> aliases = aliases();
+        if (aliases.isEmpty()) {
+            return;
+        }
+        Loggers.info(ChatChannels.getInstance().getComponentLogger(), "Registering aliases. The server may reload a few times.");
+        aliases.forEach(this::registerAlias);
+    }
+
+    private void registerAlias(@NotNull String alias) {
         new CommandTree(alias)
             .withRequirement(sender -> {
                 if (!(sender instanceof Player player)) {
@@ -98,6 +115,10 @@ public interface ChatChannel {
                 new PlayerData(info.sender()).setActiveChannel(this);
             })
             .register(plugin().namespace());
+    }
+
+    default boolean persistent() {
+        return true;
     }
 
 }

@@ -54,7 +54,7 @@ public record PlayerData(Player player) {
         ChatChannel initial = ChatChannelRegistry.getInstance().getInitialChannel();
         if (initial == null) {
             this.player.getPersistentDataContainer().remove(CHANNEL_KEY);
-            MessageConfig.getInstance().getNotInChannelMessage();
+            MessageConfig.getInstance().getNotInChannelMessage().send(this.player);
             return;
         }
         setActiveChannel(initial);

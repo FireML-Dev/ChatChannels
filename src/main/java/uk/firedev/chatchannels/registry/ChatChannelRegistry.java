@@ -4,17 +4,20 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import uk.firedev.chatchannels.ChatChannels;
 import uk.firedev.chatchannels.api.ChatChannel;
+import uk.firedev.chatchannels.channels.ChannelLoader;
 import uk.firedev.chatchannels.configs.MainConfig;
 import uk.firedev.daisylib.Loggers;
+import uk.firedev.daisylib.registry.Registry;
 
 import java.util.Map;
 import java.util.TreeMap;
 
-public class ChatChannelRegistry {
+public class ChatChannelRegistry implements Registry<ChatChannel> {
 
     private static final ChatChannelRegistry instance = new ChatChannelRegistry();
 
     private final Map<String, ChatChannel> registry = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    private final ChannelLoader loader = new ChannelLoader(this);
 
     private ChatChannelRegistry() {}
 
@@ -22,18 +25,16 @@ public class ChatChannelRegistry {
         return instance;
     }
 
-    public void register(@NotNull ChatChannel channel) {
-        register(channel, false);
-    }
-
-    public void register(@NotNull ChatChannel channel, boolean force) {
+    public boolean register(@NotNull ChatChannel channel, boolean force) {
         String name = channel.name();
         if (!force && registry.containsKey(name)) {
-            Loggers.warn(ChatChannels.getInstance().getComponentLogger(), "Attempted to register already existing ConfigChatChannel: " + name);
-            return;
+            Loggers.warn(ChatChannels.getInstance().getComponentLogger(), "Attempted to register already existing ChatChannel: " + name);
+            return false;
         }
         registry.put(name, channel);
-        Loggers.info(ChatChannels.getInstance().getComponentLogger(), "Registered ChatChannel " + name + " from " + channel.plugin().getName());
+        channel.registerAliases();
+        Loggers.info(ChatChannels.getInstance().getComponentLogger(), "Registered ChatChannel " + name);
+        return true;
     }
 
     public boolean isEmpty() {
@@ -42,21 +43,45 @@ public class ChatChannelRegistry {
 
     public void init(@NotNull ChatChannels plugin) {
         plugin.getServer().getPluginManager().registerEvents(new ChatListener(), plugin);
+        loader.loadChannels();
     }
 
     public void reload() {
-        registry.values().forEach(ChatChannel::reload);
+        cleanRegistry();
+        loader.loadChannels();
+    }
+
+    private void cleanRegistry() {
+        registry.values().removeIf(channel -> !channel.persistent());
     }
 
     public @NotNull Map<String, ChatChannel> getRegistry() {
         return Map.copyOf(registry);
     }
 
+    @Nullable
+    @Override
+    public ChatChannel get(@NotNull String s) {
+        return registry.get(s);
+    }
+
+    @Override
+    public boolean unregister(@NotNull String s) {
+        return registry.remove(s) != null;
+    }
+
+    @NotNull
+    @Override
+    public ChatChannel getOrDefault(@NotNull String s, @NotNull ChatChannel channel) {
+        ChatChannel val = get(s);
+        return val == null ? channel : val;
+    }
+
     public @Nullable ChatChannel getChatChannel(@Nullable String id) {
         if (id == null) {
             return null;
         }
-        return registry.get(id);
+        return get(id);
     }
 
     public @Nullable ChatChannel getInitialChannel() {

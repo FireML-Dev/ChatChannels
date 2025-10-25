@@ -1,31 +1,19 @@
-# Controls whether this channel is enabled.
+id: global
 enabled: true
-
-# How should this channel be displayed in placeholders and messages?
 display: <gold>Global
-
-# How should messages in this channel be formatted?
 format: "<color:#00fb9a>[Global]</color> <white>{name} ➻ {message}</white>"
 
-# Which commands should be used as a shortcut to enter this channel?
-# This requires a server restart to take effect.
 commands:
   - global
   - g
   - gc
 
-# The requirements to access the channel.
 requirements:
   - "PERMISSION:chatchannel.global"
 
-# Controls chat pinging
 ping:
-  # Should pinging be enabled?
   enable: true
-  # How long should the cooldown between pings be? (in seconds)
   cooldown: 10
-  # What sound should it make?
-  # You can get the sound key from the /playsound command.
   sound:
     sound: entity.experience_orb.pickup
     volume: 3

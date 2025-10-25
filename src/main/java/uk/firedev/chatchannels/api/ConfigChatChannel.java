@@ -29,25 +29,25 @@ public class ConfigChatChannel extends ConfigBase implements ChatChannel {
     private final List<String> commandAliases;
     private @NotNull Requirement accessRequirement = new Requirement(plugin());
 
-    public ConfigChatChannel(@NotNull File file, @NotNull Plugin plugin) throws NullPointerException {
+    public ConfigChatChannel(@NotNull File file, @NotNull Plugin plugin) throws ChannelLoadException {
         super(file, null, plugin);
         // init performs a reload.
         init();
-        this.id = Objects.requireNonNull(getConfig().getString("id"));
+        this.id = checkId();
         this.commandAliases = getConfig().getStringList("commands");
-        registerAliases();
+    }
+
+    private @NotNull String checkId() throws ChannelLoadException {
+        String id = getConfig().getString("id");
+        if (id == null) {
+            throw new ChannelLoadException("Missing id.");
+        }
+        return id;
     }
 
     @Override
     public boolean isEnabled() {
         return getConfig().getBoolean("enabled", true);
-    }
-
-    @Override
-    public void reload() {
-        super.reload();
-        // Cache the accessRequirement so we don't need to rebuild it every time we need it.
-        this.accessRequirement = new Requirement(getConfig().getConfigurationSection("requirements"), plugin());
     }
 
     @Override
@@ -116,8 +116,14 @@ public class ConfigChatChannel extends ConfigBase implements ChatChannel {
         return getConfig().getLong("radius", -1);
     }
 
-    private void registerAliases() {
-        this.commandAliases.forEach(this::registerAlias);
+    @Override
+    public @NotNull List<String> aliases() {
+        return commandAliases;
+    }
+
+    @Override
+    public boolean persistent() {
+        return false;
     }
 
 }
