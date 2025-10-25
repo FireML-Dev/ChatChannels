@@ -37,6 +37,15 @@ public class ConfigChatChannel extends ConfigBase implements ChatChannel {
         this.accessRequirement = new Requirement(getConfig().getConfigurationSection("requirements"), plugin);
     }
 
+    public ConfigChatChannel(@NotNull String fileName, @NotNull Plugin plugin) throws ChannelLoadException {
+        super(fileName, fileName, plugin);
+        // init performs a reload.
+        init();
+        this.id = checkId();
+        this.commandAliases = getConfig().getStringList("commands");
+        this.accessRequirement = new Requirement(getConfig().getConfigurationSection("requirements"), plugin);
+    }
+
     private @NotNull String checkId() throws ChannelLoadException {
         String id = getConfig().getString("id");
         if (id == null) {
