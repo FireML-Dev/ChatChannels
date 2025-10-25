@@ -15,6 +15,9 @@ public class ChatListener implements Listener {
             return;
         }
         ChatChannel channel = new PlayerData(event.getPlayer()).getActiveChannel();
+        if (channel == null) {
+            return;
+        }
         event.setCancelled(true);
         channel.handleEvent(event);
     }

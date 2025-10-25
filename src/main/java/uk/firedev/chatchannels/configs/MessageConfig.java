@@ -58,4 +58,9 @@ public class MessageConfig extends ConfigBase {
             .replace(getPrefixReplacer());
     }
 
+    public @NotNull ComponentMessage getNotInChannelMessage() {
+        return getComponentMessage("not-in-channel", "{prefix}<red>You are no longer in a chat channel.")
+            .replace(getPrefixReplacer());
+    }
+
 }

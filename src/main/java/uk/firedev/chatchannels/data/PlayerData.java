@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import uk.firedev.chatchannels.ChatChannels;
 import uk.firedev.chatchannels.api.ChatChannel;
 import uk.firedev.chatchannels.configs.MessageConfig;
@@ -29,16 +30,16 @@ public record PlayerData(Player player) {
      *
      * @return The player's active chat channel, or global channel if null or invalid.
      */
-    public @NotNull ChatChannel getActiveChannel() {
+    public @Nullable ChatChannel getActiveChannel() {
         String channelStr = this.player.getPersistentDataContainer().get(CHANNEL_KEY, PersistentDataType.STRING);
         if (channelStr == null) {
-            return ChatChannelRegistry.getInstance().getGlobalChat();
+            return ChatChannelRegistry.getInstance().getInitialChannel();
         }
         ChatChannel channel = ChatChannelRegistry.getInstance().getChatChannel(channelStr);
         if (channel == null) {
             MessageConfig.getInstance().getNoLongerExistsMessage().send(this.player);
             resetActiveChannel();
-            return ChatChannelRegistry.getInstance().getGlobalChat();
+            return ChatChannelRegistry.getInstance().getInitialChannel();
         }
         return channel;
     }
@@ -50,7 +51,13 @@ public record PlayerData(Player player) {
     }
 
     public void resetActiveChannel() {
-        setActiveChannel(ChatChannelRegistry.getInstance().getGlobalChat());
+        ChatChannel initial = ChatChannelRegistry.getInstance().getInitialChannel();
+        if (initial == null) {
+            this.player.getPersistentDataContainer().remove(CHANNEL_KEY);
+            MessageConfig.getInstance().getNotInChannelMessage();
+            return;
+        }
+        setActiveChannel(initial);
     }
 
 }

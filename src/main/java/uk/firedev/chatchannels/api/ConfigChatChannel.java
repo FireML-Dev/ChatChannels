@@ -1,35 +1,39 @@
 package uk.firedev.chatchannels.api;
 
-import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.sound.Sound;
-import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import uk.firedev.chatchannels.configs.MessageConfig;
-import uk.firedev.chatchannels.data.PlayerData;
 import uk.firedev.daisylib.addons.requirement.Requirement;
-import uk.firedev.daisylib.addons.requirement.RequirementData;
 import uk.firedev.daisylib.command.CooldownHelper;
 import uk.firedev.daisylib.config.ConfigBase;
 import uk.firedev.daisylib.libs.messagelib.message.ComponentMessage;
 import uk.firedev.daisylib.libs.messagelib.message.ComponentSingleMessage;
 import uk.firedev.daisylib.libs.messagelib.replacer.Replacer;
 
+import java.io.File;
 import java.util.List;
+import java.util.Objects;
 
-public abstract class ConfigChatChannel extends ConfigBase implements ChatChannel {
+/**
+ * Used for fetching chat channels from the channels config folder.
+ */
+@ApiStatus.Internal
+public class ConfigChatChannel extends ConfigBase implements ChatChannel {
 
     protected final CooldownHelper pingCooldown = CooldownHelper.create();
 
+    private final @NotNull String id;
     private final List<String> commandAliases;
-    private @NotNull Requirement accessRequirement;
+    private @NotNull Requirement accessRequirement = new Requirement(plugin());
 
-    public ConfigChatChannel(@NotNull String fileName, @NotNull Plugin plugin) {
-        super(fileName, fileName, plugin);
+    public ConfigChatChannel(@NotNull File file, @NotNull Plugin plugin) throws NullPointerException {
+        super(file, null, plugin);
         // init performs a reload.
         init();
+        this.id = Objects.requireNonNull(getConfig().getString("id"));
         this.commandAliases = getConfig().getStringList("commands");
         registerAliases();
     }
@@ -47,7 +51,9 @@ public abstract class ConfigChatChannel extends ConfigBase implements ChatChanne
     }
 
     @Override
-    public abstract @NotNull String name();
+    public @NotNull String name() {
+        return id;
+    }
 
     @Override
     public final @NotNull Plugin plugin() {
@@ -84,12 +90,25 @@ public abstract class ConfigChatChannel extends ConfigBase implements ChatChanne
         return accessRequirement;
     }
 
-    public abstract @NotNull ComponentSingleMessage defaultFormat();
+    public @NotNull ComponentSingleMessage defaultFormat() {
+        return ComponentMessage.componentMessage("<gray>[" + name() + "]</gray> <white>{name} ➻ {message}</white>");
+    }
 
     @Override
     public @NotNull ComponentSingleMessage format() {
         ComponentMessage message = ComponentMessage.componentMessage(getMessageLoader(), "format");
         return message == null ? defaultFormat() : message.toSingleMessage();
+    }
+
+    @Override
+    public boolean shouldSendToTarget(@NotNull Player player, @NotNull Player target) {
+        return hasAccess(target);
+    }
+
+    @Nullable
+    @Override
+    public Replacer replacer(@NotNull Player player) {
+        return null;
     }
 
     @Override

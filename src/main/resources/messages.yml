@@ -4,6 +4,7 @@ join-channel: "{prefix}<#F0E68C>You are now speaking in <gold>{channel}</gold> C
 no-nearby-players: "{prefix}<red>There are no players within range."
 no-access: "{prefix}<red>You cannot access that channel!"
 no-longer-exists: "{prefix}<red>The channel you were in no longer exists."
+not-in-channel: "{prefix}<red>You are no longer in a chat channel."
 reloaded: "{prefix}<#F0E68C>Successfully reloaded the plugin."
 
 # DO NOT TOUCH THIS VALUE!!!
