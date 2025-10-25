@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import uk.firedev.chatchannels.ChatChannels;
 import uk.firedev.chatchannels.api.ChatChannel;
+import uk.firedev.chatchannels.api.ConfigChatChannel;
 import uk.firedev.chatchannels.channels.GlobalChat;
 import uk.firedev.chatchannels.channels.LocalChat;
 import uk.firedev.daisylib.Loggers;
@@ -33,7 +34,7 @@ public class ChatChannelRegistry {
     public void register(@NotNull ChatChannel channel, boolean force) {
         String name = channel.name();
         if (!force && registry.containsKey(name)) {
-            Loggers.warn(ChatChannels.getInstance().getComponentLogger(), "Attempted to register already existing ChatChannel: " + name);
+            Loggers.warn(ChatChannels.getInstance().getComponentLogger(), "Attempted to register already existing ConfigChatChannel: " + name);
             return;
         }
         registry.put(name, channel);

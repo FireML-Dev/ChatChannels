@@ -1,5 +1,7 @@
 package uk.firedev.chatchannels.api;
 
+import dev.jorel.commandapi.CommandTree;
+import dev.jorel.commandapi.arguments.GreedyStringArgument;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
@@ -12,80 +14,35 @@ import uk.firedev.chatchannels.data.PlayerData;
 import uk.firedev.daisylib.addons.requirement.Requirement;
 import uk.firedev.daisylib.addons.requirement.RequirementData;
 import uk.firedev.daisylib.command.CooldownHelper;
-import uk.firedev.daisylib.config.ConfigBase;
-import dev.jorel.commandapi.CommandTree;
-import dev.jorel.commandapi.arguments.GreedyStringArgument;
 import uk.firedev.daisylib.libs.messagelib.message.ComponentMessage;
 import uk.firedev.daisylib.libs.messagelib.message.ComponentSingleMessage;
 import uk.firedev.daisylib.libs.messagelib.replacer.Replacer;
 
-import java.util.List;
 import java.util.Objects;
 
-public abstract class ChatChannel extends ConfigBase {
+public interface ChatChannel {
 
-    protected final CooldownHelper pingCooldown = CooldownHelper.create();
+    boolean isEnabled();
 
-    private final List<String> commandAliases;
-    private @NotNull Requirement accessRequirement;
+    @NotNull String name();
 
-    public ChatChannel(@NotNull String fileName, @NotNull Plugin plugin) {
-        super(fileName, fileName, plugin);
-        // init performs a reload.
-        init();
-        this.commandAliases = getConfig().getStringList("commands");
-        registerAliases();
-    }
+    @NotNull Plugin plugin();
 
-    public boolean isEnabled() {
-        return getConfig().getBoolean("enabled", true);
-    }
+    @NotNull ComponentSingleMessage display();
 
-    @Override
-    public void reload() {
-        super.reload();
-        // Cache the accessRequirement so we don't need to rebuild it every time we need it.
-        this.accessRequirement = new Requirement(getConfig().getConfigurationSection("requirements"), plugin());
-    }
+    boolean enablePing();
 
-    public abstract @NotNull String name();
+    @Nullable Sound pingSound();
 
-    public final @NotNull Plugin plugin() {
-        return getPlugin();
-    }
+    int pingCooldown();
 
-    public @NotNull ComponentSingleMessage display() {
-        return ComponentMessage.componentMessage(getConfig().getString("display", name()));
-    }
+    @NotNull Requirement accessRequirement();
 
-    public boolean enablePing() {
-        return getConfig().getBoolean("ping.enable", true);
-    }
+    @NotNull ComponentSingleMessage format();
 
-    public @Nullable Sound pingSound() {
-        return getSound("ping.sound");
-    }
+    long radius();
 
-    public int pingCooldown() {
-        return getConfig().getInt("ping.cooldown");
-    }
-
-    public @NotNull Requirement accessRequirement() {
-        return accessRequirement;
-    }
-
-    public abstract @NotNull ComponentSingleMessage defaultFormat();
-
-    public @NotNull ComponentSingleMessage format() {
-        ComponentMessage message = ComponentMessage.componentMessage(getMessageLoader(), "format");
-        return message == null ? defaultFormat() : message.toSingleMessage();
-    }
-
-    public long radius() {
-        return getConfig().getLong("radius", -1);
-    }
-
-    public void handleEvent(@NotNull AsyncChatEvent event) {
+    default void handleEvent(@NotNull AsyncChatEvent event) {
         Player sender = event.getPlayer();
         if (!hasAccess(sender)) {
             MessageConfig.getInstance().getNoAccessMessage().send(sender);
@@ -95,18 +52,22 @@ public abstract class ChatChannel extends ConfigBase {
         sendMessage(sender, event.message());
     }
 
-    public void sendMessage(@NotNull Player sender, @NotNull Component component) {
+    default void sendMessage(@NotNull Player sender, @NotNull Component component) {
         ComponentSingleMessage message = format().parsePlaceholderAPI(sender)
             .replace("{name}", sender.name())
             .replace(replacer(sender));
         new Messaging(this).sendMessage(sender, component, message);
     }
 
-    public abstract boolean shouldSendToTarget(@NotNull Player player, @NotNull Player target);
+    boolean shouldSendToTarget(@NotNull Player player, @NotNull Player target);
 
-    public abstract @Nullable Replacer replacer(@NotNull Player player);
+    @Nullable Replacer replacer(@NotNull Player player);
 
-    public boolean hasAccess(@NotNull Player player) {
+    @NotNull CooldownHelper pingCooldownHandler();
+
+    void reload();
+
+    default boolean hasAccess(@NotNull Player player) {
         if (!isEnabled()) {
             return false;
         }
@@ -115,11 +76,7 @@ public abstract class ChatChannel extends ConfigBase {
         );
     }
 
-    private void registerAliases() {
-        this.commandAliases.forEach(this::registerAlias);
-    }
-
-    private void registerAlias(@NotNull String alias) {
+    default void registerAlias(@NotNull String alias) {
         new CommandTree(alias)
             .withRequirement(sender -> {
                 if (!(sender instanceof Player player)) {

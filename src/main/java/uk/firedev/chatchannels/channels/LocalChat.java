@@ -4,12 +4,12 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import uk.firedev.chatchannels.ChatChannels;
-import uk.firedev.chatchannels.api.ChatChannel;
+import uk.firedev.chatchannels.api.ConfigChatChannel;
 import uk.firedev.daisylib.libs.messagelib.message.ComponentMessage;
 import uk.firedev.daisylib.libs.messagelib.message.ComponentSingleMessage;
 import uk.firedev.daisylib.libs.messagelib.replacer.Replacer;
 
-public class LocalChat extends ChatChannel {
+public class LocalChat extends ConfigChatChannel {
 
     public LocalChat() {
         super("channels/local.yml", ChatChannels.getInstance());

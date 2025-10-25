@@ -1,9 +1,9 @@
 package uk.firedev.chatchannels.commands.arguments;
 
-import com.mojang.brigadier.builder.ArgumentBuilder;
 import dev.jorel.commandapi.arguments.ArgumentSuggestions;
 import org.bukkit.entity.Player;
 import uk.firedev.chatchannels.api.ChatChannel;
+import uk.firedev.chatchannels.api.ConfigChatChannel;
 import uk.firedev.chatchannels.registry.ChatChannelRegistry;
 import dev.jorel.commandapi.arguments.Argument;
 import dev.jorel.commandapi.arguments.CustomArgument;

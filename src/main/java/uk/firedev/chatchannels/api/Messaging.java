@@ -61,7 +61,7 @@ public record Messaging(ChatChannel channel) {
     }
 
     private Component processPing(@NotNull Player player, @NotNull Component component) {
-        if (!channel.enablePing() || channel.pingCooldown.hasCooldown(player.getUniqueId())) {
+        if (!channel.enablePing() || channel.pingCooldownHandler().hasCooldown(player.getUniqueId())) {
             return component;
         }
         ComponentSingleMessage message = ComponentMessage.componentMessage(component);
@@ -72,7 +72,7 @@ public record Messaging(ChatChannel channel) {
             if (pingSound != null) {
                 player.playSound(pingSound);
             }
-            channel.pingCooldown.applyCooldown(player.getUniqueId(), Duration.ofSeconds(channel.pingCooldown()));
+            channel.pingCooldownHandler().applyCooldown(player.getUniqueId(), Duration.ofSeconds(channel.pingCooldown()));
             return message.get();
         }
         return component;

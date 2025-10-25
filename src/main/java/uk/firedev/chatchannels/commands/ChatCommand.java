@@ -1,6 +1,7 @@
 package uk.firedev.chatchannels.commands;
 
 import uk.firedev.chatchannels.api.ChatChannel;
+import uk.firedev.chatchannels.api.ConfigChatChannel;
 import uk.firedev.chatchannels.commands.arguments.ChatChannelArgument;
 import uk.firedev.chatchannels.configs.MessageConfig;
 import uk.firedev.chatchannels.data.PlayerData;
