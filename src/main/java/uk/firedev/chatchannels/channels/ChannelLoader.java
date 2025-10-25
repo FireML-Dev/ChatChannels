@@ -47,6 +47,10 @@ public class ChannelLoader {
     }
 
     private void regenExampleFile(@NotNull File directory) {
+        File file = new File(ChatChannels.getInstance().getDataFolder(), "_example.yml");
+        if (file.exists()) {
+            file.delete();
+        }
         FileUtils.loadFile(directory, "_example.yml", "channels/_example.yml", ChatChannels.getInstance());
     }
 
