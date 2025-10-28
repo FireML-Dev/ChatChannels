@@ -46,7 +46,7 @@ public record Messaging(ChatChannel channel) {
     public Optional<List<Player>> handleRadius(@NotNull Player sender) {
         long radius = channel.radius();
         // If the radius is 0 or less, we can just pass all online players
-        if (radius < 0) {
+        if (radius <= 0) {
             return Optional.of(List.copyOf(Bukkit.getOnlinePlayers()));
         }
         List<Player> players = sender.getNearbyEntities(radius, radius, radius).stream()
