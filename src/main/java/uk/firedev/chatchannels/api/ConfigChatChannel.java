@@ -24,14 +24,12 @@ public class ConfigChatChannel extends ConfigBase implements ChatChannel {
 
     protected final CooldownHelper pingCooldown = CooldownHelper.create();
 
-    private final @NotNull Plugin plugin;
     private final @NotNull String id;
     private final List<String> commandAliases;
     private final @NotNull Requirement accessRequirement;
 
     public ConfigChatChannel(@NotNull File file, @NotNull Plugin plugin) throws ChannelLoadException {
         super(file, null, plugin);
-        this.plugin = plugin;
         this.id = checkId();
         this.commandAliases = getConfig().getStringList("commands");
         this.accessRequirement = new Requirement(getConfig().getConfigurationSection("requirements"), plugin);
@@ -39,7 +37,6 @@ public class ConfigChatChannel extends ConfigBase implements ChatChannel {
 
     public ConfigChatChannel(@NotNull String fileName, @NotNull String resourceName, @NotNull Plugin plugin) throws ChannelLoadException {
         super(fileName, resourceName, plugin);
-        this.plugin = plugin;
         this.id = checkId();
         this.commandAliases = getConfig().getStringList("commands");
         this.accessRequirement = new Requirement(getConfig().getConfigurationSection("requirements"), plugin);
@@ -65,7 +62,7 @@ public class ConfigChatChannel extends ConfigBase implements ChatChannel {
 
     @Override
     public final @NotNull Plugin plugin() {
-        return this.plugin;
+        return getPlugin();
     }
 
     @Override
