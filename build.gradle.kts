@@ -15,11 +15,13 @@ repositories {
     gradlePluginPortal()
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.codemc.io/repository/FireML/")
+    maven("https://nexus.scarsz.me/content/groups/public/")
 }
 
 dependencies {
     compileOnly(libs.paper.api)
     compileOnly(libs.daisylib)
+    compileOnly(libs.discordsrv)
 
     implementation(libs.commandapi)
 }
@@ -41,8 +43,12 @@ paper {
     generateLibrariesJson = true
 
     serverDependencies {
-            register("DaisyLib") {
+        register("DaisyLib") {
             required = true
+            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
+        }
+        register("DiscordSRV") {
+            required = false
             load = PaperPluginDescription.RelativeLoadOrder.BEFORE
         }
     }
