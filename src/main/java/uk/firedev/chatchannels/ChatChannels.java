@@ -40,8 +40,6 @@ public final class ChatChannels extends JavaPlugin {
     @Override
     public void onEnable() {
         CommandAPI.onEnable();
-        MainConfig.getInstance().init();
-        MessageConfig.getInstance().init();
         MainCommand.getCommand().register(this);
         ChatChannelRegistry.getInstance().init(this);
         ChatCommand.getCommand().register(this);

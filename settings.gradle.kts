@@ -11,7 +11,7 @@ dependencyResolutionManagement {
             library("luckperms", "net.luckperms:api:5.4")
 
             // implementation dependencies
-            library("commandapi", "dev.jorel:commandapi-paper-shade:11.0.0")
+            library("commandapi", "dev.jorel:commandapi-paper-shade:11.1.0")
 
             // paperLibrary dependencies
 
