@@ -3,26 +3,24 @@ package uk.firedev.chatchannels.api;
 import net.kyori.adventure.sound.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import uk.firedev.daisylib.addons.requirement.Requirement;
-import uk.firedev.daisylib.command.CooldownHelper;
 import uk.firedev.daisylib.config.ConfigBase;
 import uk.firedev.daisylib.libs.messagelib.message.ComponentMessage;
 import uk.firedev.daisylib.libs.messagelib.message.ComponentSingleMessage;
 import uk.firedev.daisylib.libs.messagelib.replacer.Replacer;
+import uk.firedev.daisylib.util.CooldownHelper;
 
 import java.io.File;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Used for fetching chat channels from the config files.
  */
 public class ConfigChatChannel extends ConfigBase implements ChatChannel {
 
-    protected final CooldownHelper pingCooldown = CooldownHelper.create();
+    protected final CooldownHelper pingCooldown = CooldownHelper.cooldownHelper();
 
     private final @NotNull String id;
     private final List<String> commandAliases;

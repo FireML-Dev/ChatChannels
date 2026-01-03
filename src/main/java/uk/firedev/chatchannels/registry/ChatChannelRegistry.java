@@ -6,8 +6,8 @@ import uk.firedev.chatchannels.ChatChannels;
 import uk.firedev.chatchannels.api.ChatChannel;
 import uk.firedev.chatchannels.channels.ChannelLoader;
 import uk.firedev.chatchannels.configs.MainConfig;
-import uk.firedev.daisylib.Loggers;
 import uk.firedev.daisylib.registry.Registry;
+import uk.firedev.daisylib.util.Loggers;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -37,8 +37,14 @@ public class ChatChannelRegistry implements Registry<ChatChannel> {
         return true;
     }
 
+    @Override
     public boolean isEmpty() {
         return registry.isEmpty();
+    }
+
+    @Override
+    public void clear() {
+        registry.clear();
     }
 
     public void init(@NotNull ChatChannels plugin) {

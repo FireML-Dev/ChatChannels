@@ -1,12 +1,12 @@
 package uk.firedev.chatchannels.channels;
 
+import uk.firedev.daisylib.util.FileUtil;
 import org.jetbrains.annotations.NotNull;
 import uk.firedev.chatchannels.ChatChannels;
 import uk.firedev.chatchannels.api.ChannelLoadException;
 import uk.firedev.chatchannels.api.ConfigChatChannel;
 import uk.firedev.chatchannels.registry.ChatChannelRegistry;
-import uk.firedev.daisylib.Loggers;
-import uk.firedev.daisylib.utils.FileUtils;
+import uk.firedev.daisylib.util.Loggers;
 
 import java.io.File;
 import java.util.List;
@@ -24,7 +24,7 @@ public class ChannelLoader {
         // Always do this first as it checks if the directory exists.
         loadDefaultFiles(directory);
         regenExampleFile(directory);
-        List<File> files = FileUtils.getFilesInDirectory(directory, true, true);
+        List<File> files = FileUtil.getFilesInDirectory(directory, true, true);
         files.forEach(file -> {
             ConfigChatChannel channel;
             try {
@@ -41,8 +41,8 @@ public class ChannelLoader {
         if (directory.exists()) {
             return;
         }
-        FileUtils.loadFile(directory, "global.yml", "channels/global.yml", ChatChannels.getInstance());
-        FileUtils.loadFile(directory, "local.yml", "channels/local.yml", ChatChannels.getInstance());
+        FileUtil.loadFile(directory, "global.yml", "channels/global.yml", ChatChannels.getInstance());
+        FileUtil.loadFile(directory, "local.yml", "channels/local.yml", ChatChannels.getInstance());
         Loggers.info(ChatChannels.getInstance().getComponentLogger(), "Loaded default channel configs.");
     }
 
@@ -51,7 +51,7 @@ public class ChannelLoader {
         if (file.exists()) {
             file.delete();
         }
-        FileUtils.loadFile(directory, "_example.yml", "channels/_example.yml", ChatChannels.getInstance());
+        FileUtil.loadFile(directory, "_example.yml", "channels/_example.yml", ChatChannels.getInstance());
     }
 
 }

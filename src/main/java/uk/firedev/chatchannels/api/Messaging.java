@@ -13,18 +13,15 @@ import uk.firedev.daisylib.libs.messagelib.message.ComponentMessage;
 import uk.firedev.daisylib.libs.messagelib.message.ComponentSingleMessage;
 
 import java.time.Duration;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-public record Messaging(ChatChannel channel) {
-
-    public Messaging(@NotNull ChatChannel channel) {
-        this.channel = channel;
-    }
+public record Messaging(@NotNull ChatChannel channel) {
 
     public void sendMessage(@NotNull Player sender, @NotNull Component sentMessage, @NotNull ComponentSingleMessage message) {
         Bukkit.getScheduler().runTask(ChatChannels.getInstance(), () -> {
-            Optional<List<Player>> targetPlayers = handleRadius(sender);
+            Optional<Collection<? extends Player>> targetPlayers = handleRadius(sender);
             if (targetPlayers.isEmpty()) {
                 return;
             }
@@ -57,11 +54,11 @@ public record Messaging(ChatChannel channel) {
         });
     }
 
-    public Optional<List<Player>> handleRadius(@NotNull Player sender) {
+        public Optional<Collection<? extends Player>> handleRadius(@NotNull Player sender) {
         long radius = channel.radius();
         // If the radius is 0 or less, we can just pass all online players
         if (radius <= 0) {
-            return Optional.of(List.copyOf(Bukkit.getOnlinePlayers()));
+            return Optional.of(Bukkit.getOnlinePlayers());
         }
         List<Player> players = sender.getNearbyEntities(radius, radius, radius).stream()
             .filter(entity -> entity instanceof Player)
@@ -75,7 +72,7 @@ public record Messaging(ChatChannel channel) {
     }
 
     private Component processPing(@NotNull Player player, @NotNull Component component) {
-        if (!channel.enablePing() || channel.pingCooldownHandler().hasCooldown(player.getUniqueId())) {
+        if (!channel.enablePing() || channel.pingCooldownHandler().has(player.getUniqueId())) {
             return component;
         }
         ComponentSingleMessage message = ComponentMessage.componentMessage(component);
@@ -86,7 +83,7 @@ public record Messaging(ChatChannel channel) {
             if (pingSound != null) {
                 player.playSound(pingSound);
             }
-            channel.pingCooldownHandler().applyCooldown(player.getUniqueId(), Duration.ofSeconds(channel.pingCooldown()));
+            channel.pingCooldownHandler().apply(player.getUniqueId(), Duration.ofSeconds(channel.pingCooldown()));
             return message.get();
         }
         return component;
