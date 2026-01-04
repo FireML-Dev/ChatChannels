@@ -1,24 +1,27 @@
 package uk.firedev.chatchannels.commands;
 
+import com.mojang.brigadier.builder.ArgumentBuilder;
+import com.mojang.brigadier.tree.LiteralCommandNode;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import io.papermc.paper.command.brigadier.Commands;
 import uk.firedev.chatchannels.ChatChannels;
 import uk.firedev.chatchannels.configs.MessageConfig;
-import dev.jorel.commandapi.CommandTree;
-import dev.jorel.commandapi.arguments.Argument;
-import dev.jorel.commandapi.arguments.LiteralArgument;
 
 public class MainCommand {
 
-    public static CommandTree getCommand() {
-        return new CommandTree("chatchannels")
-            .withPermission("chatchannels.command")
-            .then(reload());
+    public static LiteralCommandNode<CommandSourceStack> get() {
+        return Commands.literal("chatchannels")
+            .requires(source -> source.getSender().hasPermission("chatchannels.command"))
+            .then(reload())
+            .build();
     }
 
-    private static Argument<String> reload() {
-        return new LiteralArgument("reload")
-            .executes(info -> {
+    private static ArgumentBuilder<CommandSourceStack, ?> reload() {
+        return Commands.literal("reload")
+            .executes(ctx -> {
                 ChatChannels.getInstance().reload();
-                MessageConfig.getInstance().getReloadedMessage().send(info.sender());
+                MessageConfig.getInstance().getReloadedMessage().send(ctx.getSource().getSender());
+                return 1;
             });
     }
 

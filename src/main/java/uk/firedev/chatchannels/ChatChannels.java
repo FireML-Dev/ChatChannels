@@ -1,10 +1,10 @@
 package uk.firedev.chatchannels;
 
-import dev.jorel.commandapi.CommandAPI;
-import dev.jorel.commandapi.CommandAPIPaperConfig;
+import io.papermc.paper.command.brigadier.Commands;
+import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import uk.firedev.chatchannels.commands.ChatCommand;
 import uk.firedev.chatchannels.commands.MainCommand;
 import uk.firedev.chatchannels.configs.MainConfig;
@@ -15,6 +15,8 @@ public final class ChatChannels extends JavaPlugin {
 
     private static ChatChannels INSTANCE;
 
+    private boolean loading = true;
+
     public ChatChannels() {
         if (INSTANCE != null) {
             throw new UnsupportedOperationException(getClass().getName() + " has already been assigned!");
@@ -22,7 +24,7 @@ public final class ChatChannels extends JavaPlugin {
         INSTANCE = this;
     }
 
-    public static @NotNull ChatChannels getInstance() {
+    public static @NonNull ChatChannels getInstance() {
         if (INSTANCE == null) {
             throw new UnsupportedOperationException(ChatChannels.class.getSimpleName() + " has not been assigned!");
         }
@@ -31,28 +33,45 @@ public final class ChatChannels extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        CommandAPI.onLoad(new CommandAPIPaperConfig(this)
-            .missingExecutorImplementationMessage("You are not able to use this command!")
-            .fallbackToLatestNMS(true)
-        );
+        this.loading = true;
     }
 
     @Override
     public void onEnable() {
-        CommandAPI.onEnable();
-        MainCommand.getCommand().register(this);
         ChatChannelRegistry.getInstance().init(this);
-        ChatCommand.getCommand().register(this);
+        // Do this after, as we need the channel registry to be full.
+        registerCommands();
+        this.loading = false;
     }
 
     @Override
     public void onDisable() {}
 
+    private void registerCommands() {
+        getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> {
+            Commands registrar = commands.registrar();
+
+            registrar.register(MainCommand.get());
+            registrar.register(ChatCommand.get());
+            ChatChannelRegistry.getInstance().getRegistry()
+                .values()
+                .forEach(channel ->
+                    channel.registerAliases(registrar)
+                );
+        });
+    }
+
     public void reload() {
+        this.loading = true;
         MainConfig.getInstance().reload();
         MessageConfig.getInstance().reload();
         ChatChannelRegistry.getInstance().reload();
-        Bukkit.getOnlinePlayers().forEach(CommandAPI::updateRequirements);
+        Bukkit.reloadData();
+        this.loading = false;
+    }
+
+    public boolean isLoading() {
+        return this.loading;
     }
 
 }

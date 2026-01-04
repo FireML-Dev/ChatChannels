@@ -1,5 +1,6 @@
 package uk.firedev.chatchannels.channels;
 
+import org.jspecify.annotations.NonNull;
 import uk.firedev.daisylib.util.FileUtil;
 import org.jetbrains.annotations.NotNull;
 import uk.firedev.chatchannels.ChatChannels;
@@ -37,7 +38,7 @@ public class ChannelLoader {
         });
     }
 
-    private void loadDefaultFiles(@NotNull File directory) {
+    private void loadDefaultFiles(@NonNull File directory) {
         if (directory.exists()) {
             return;
         }
@@ -46,7 +47,7 @@ public class ChannelLoader {
         Loggers.info(ChatChannels.getInstance().getComponentLogger(), "Loaded default channel configs.");
     }
 
-    private void regenExampleFile(@NotNull File directory) {
+    private void regenExampleFile(@NonNull File directory) {
         File file = new File(ChatChannels.getInstance().getDataFolder(), "_example.yml");
         if (file.exists()) {
             file.delete();

@@ -3,8 +3,8 @@ package uk.firedev.chatchannels.api;
 import net.kyori.adventure.sound.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 import uk.firedev.daisylib.addons.requirement.Requirement;
 import uk.firedev.daisylib.config.ConfigBase;
 import uk.firedev.daisylib.libs.messagelib.message.ComponentMessage;
@@ -22,25 +22,27 @@ public class ConfigChatChannel extends ConfigBase implements ChatChannel {
 
     protected final CooldownHelper pingCooldown = CooldownHelper.cooldownHelper();
 
-    private final @NotNull String id;
+    private final @NonNull String id;
     private final List<String> commandAliases;
-    private final @NotNull Requirement accessRequirement;
+    private final @NonNull Requirement accessRequirement;
 
-    public ConfigChatChannel(@NotNull File file, @NotNull Plugin plugin) throws ChannelLoadException {
+    public ConfigChatChannel(@NonNull File file, @NonNull Plugin plugin) throws ChannelLoadException {
         super(file, null, plugin);
+        init();
         this.id = checkId();
         this.commandAliases = getConfig().getStringList("commands");
         this.accessRequirement = new Requirement(getConfig().getConfigurationSection("requirements"), plugin);
     }
 
-    public ConfigChatChannel(@NotNull String fileName, @NotNull String resourceName, @NotNull Plugin plugin) throws ChannelLoadException {
+    public ConfigChatChannel(@NonNull String fileName, @NonNull String resourceName, @NonNull Plugin plugin) throws ChannelLoadException {
         super(fileName, resourceName, plugin);
+        init();
         this.id = checkId();
         this.commandAliases = getConfig().getStringList("commands");
         this.accessRequirement = new Requirement(getConfig().getConfigurationSection("requirements"), plugin);
     }
 
-    private @NotNull String checkId() throws ChannelLoadException {
+    private @NonNull String checkId() throws ChannelLoadException {
         String id = getConfig().getString("id");
         if (id == null) {
             throw new ChannelLoadException("Missing id.");
@@ -54,17 +56,17 @@ public class ConfigChatChannel extends ConfigBase implements ChatChannel {
     }
 
     @Override
-    public @NotNull String name() {
+    public @NonNull String name() {
         return id;
     }
 
     @Override
-    public final @NotNull Plugin plugin() {
+    public final @NonNull Plugin plugin() {
         return getPlugin();
     }
 
     @Override
-    public @NotNull ComponentSingleMessage display() {
+    public @NonNull ComponentSingleMessage display() {
         return ComponentMessage.componentMessage(getConfig().getString("display", name()));
     }
 
@@ -84,33 +86,33 @@ public class ConfigChatChannel extends ConfigBase implements ChatChannel {
     }
 
     @Override
-    public @NotNull CooldownHelper pingCooldownHandler() {
+    public @NonNull CooldownHelper pingCooldownHandler() {
         return pingCooldown;
     }
 
     @Override
-    public @NotNull Requirement accessRequirement() {
+    public @NonNull Requirement accessRequirement() {
         return accessRequirement;
     }
 
-    public @NotNull ComponentSingleMessage defaultFormat() {
+    public @NonNull ComponentSingleMessage defaultFormat() {
         return ComponentMessage.componentMessage("<gray>[" + name() + "]</gray> <white>{name} ➻ {message}</white>");
     }
 
     @Override
-    public @NotNull ComponentSingleMessage format() {
+    public @NonNull ComponentSingleMessage format() {
         ComponentMessage message = ComponentMessage.componentMessage(getMessageLoader(), "format");
         return message == null ? defaultFormat() : message.toSingleMessage();
     }
 
     @Override
-    public boolean shouldSendToTarget(@NotNull Player player, @NotNull Player target) {
+    public boolean shouldSendToTarget(@NonNull Player player, @NonNull Player target) {
         return hasAccess(target);
     }
 
     @Nullable
     @Override
-    public Replacer replacer(@NotNull Player player) {
+    public Replacer replacer(@NonNull Player player) {
         return null;
     }
 
@@ -120,7 +122,7 @@ public class ConfigChatChannel extends ConfigBase implements ChatChannel {
     }
 
     @Override
-    public @NotNull List<String> aliases() {
+    public @NonNull List<String> aliases() {
         return commandAliases;
     }
 

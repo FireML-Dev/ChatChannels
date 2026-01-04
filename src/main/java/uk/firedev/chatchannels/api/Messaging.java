@@ -7,6 +7,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import uk.firedev.chatchannels.ChatChannels;
 import uk.firedev.chatchannels.configs.MessageConfig;
 import uk.firedev.daisylib.libs.messagelib.message.ComponentMessage;
@@ -17,9 +18,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-public record Messaging(@NotNull ChatChannel channel) {
+public record Messaging(@NonNull ChatChannel channel) {
 
-    public void sendMessage(@NotNull Player sender, @NotNull Component sentMessage, @NotNull ComponentSingleMessage message) {
+    public void sendMessage(@NonNull Player sender, @NonNull Component sentMessage, @NonNull ComponentSingleMessage message) {
         Bukkit.getScheduler().runTask(ChatChannels.getInstance(), () -> {
             Optional<Collection<? extends Player>> targetPlayers = handleRadius(sender);
             if (targetPlayers.isEmpty()) {
@@ -54,7 +55,7 @@ public record Messaging(@NotNull ChatChannel channel) {
         });
     }
 
-        public Optional<Collection<? extends Player>> handleRadius(@NotNull Player sender) {
+        public Optional<Collection<? extends Player>> handleRadius(@NonNull Player sender) {
         long radius = channel.radius();
         // If the radius is 0 or less, we can just pass all online players
         if (radius <= 0) {
@@ -71,7 +72,7 @@ public record Messaging(@NotNull ChatChannel channel) {
         return Optional.of(players);
     }
 
-    private Component processPing(@NotNull Player player, @NotNull Component component) {
+    private Component processPing(@NonNull Player player, @NonNull Component component) {
         if (!channel.enablePing() || channel.pingCooldownHandler().has(player.getUniqueId())) {
             return component;
         }

@@ -1,32 +1,49 @@
 package uk.firedev.chatchannels.commands;
 
+import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.tree.LiteralCommandNode;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import io.papermc.paper.command.brigadier.Commands;
+import net.kyori.adventure.text.Component;
+import org.bukkit.entity.Player;
 import uk.firedev.chatchannels.api.ChatChannel;
-import uk.firedev.chatchannels.api.ConfigChatChannel;
 import uk.firedev.chatchannels.commands.arguments.ChatChannelArgument;
 import uk.firedev.chatchannels.configs.MessageConfig;
 import uk.firedev.chatchannels.data.PlayerData;
-import dev.jorel.commandapi.CommandTree;
-
-import java.util.Objects;
+import uk.firedev.daisylib.command.CommandUtils;
 
 public class ChatCommand {
 
-    public static CommandTree getCommand() {
-        return new CommandTree("chat")
-            .withAliases("channel")
-            .withShortDescription("Access chat channels")
-            .withPermission("chatchannels.command")
+    public static LiteralCommandNode<CommandSourceStack> get() {
+        return Commands.literal("chat")
             .then(
-                ChatChannelArgument.get()
-                    .executesPlayer(info -> {
-                        ChatChannel channel = Objects.requireNonNull(info.args().getUnchecked("channel"));
-                        if (!channel.isEnabled() || !channel.hasAccess(info.sender())) {
-                            MessageConfig.getInstance().getNoAccessMessage().send(info.sender());
-                            return;
+                Commands.argument("channel", new ChatChannelArgument())
+                    .executes(ctx -> {
+                        Player player = CommandUtils.requirePlayer(ctx);
+                        ChatChannel channel = ctx.getArgument("channel", ChatChannel.class);
+                        if (!channel.isEnabled() || !channel.hasAccess(player)) {
+                            MessageConfig.getInstance().getNoAccessMessage().send(player);
+                            return 1;
                         }
-                        new PlayerData(info.sender()).setActiveChannel(channel);
+                        new PlayerData(player).setActiveChannel(channel);
+                        return 1;
                     })
-            );
+                    .then(
+                        Commands.argument("message", StringArgumentType.greedyString())
+                            .executes(ctx -> {
+                                Player player = CommandUtils.requirePlayer(ctx);
+                                ChatChannel channel = ctx.getArgument("channel", ChatChannel.class);
+                                if (!channel.isEnabled() || !channel.hasAccess(player)) {
+                                    MessageConfig.getInstance().getNoAccessMessage().send(player);
+                                    return 1;
+                                }
+                                String message = ctx.getArgument("message", String.class);
+                                channel.sendMessage(player, Component.text(message));
+                                return 1;
+                            })
+                    )
+            )
+            .build();
     }
 
 }

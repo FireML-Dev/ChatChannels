@@ -6,22 +6,18 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 import uk.firedev.chatchannels.ChatChannels;
 import uk.firedev.chatchannels.api.ChatChannel;
 import uk.firedev.chatchannels.configs.MessageConfig;
 import uk.firedev.chatchannels.registry.ChatChannelRegistry;
-import dev.jorel.commandapi.CommandAPI;
 
-public record PlayerData(Player player) {
+public record PlayerData(@NonNull Player player) {
 
     private static final NamespacedKey CHANNEL_KEY = new NamespacedKey(ChatChannels.getInstance(), "channel");
 
-    public PlayerData(@NotNull Player player) {
-        this.player = player;
-    }
-
     @Override
-    public @NotNull Player player() {
+    public @NonNull Player player() {
         return this.player;
     }
 
@@ -44,10 +40,10 @@ public record PlayerData(Player player) {
         return channel;
     }
 
-    public void setActiveChannel(@NotNull ChatChannel channel) {
+    public void setActiveChannel(@NonNull ChatChannel channel) {
         this.player.getPersistentDataContainer().set(CHANNEL_KEY, PersistentDataType.STRING, channel.name());
         MessageConfig.getInstance().getJoinChannelMessage(channel).send(this.player);
-        CommandAPI.updateRequirements(this.player);
+        player.updateCommands();
     }
 
     public void resetActiveChannel() {

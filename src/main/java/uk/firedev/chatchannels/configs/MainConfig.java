@@ -2,6 +2,7 @@ package uk.firedev.chatchannels.configs;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 import uk.firedev.chatchannels.ChatChannels;
 import uk.firedev.chatchannels.api.ChatChannel;
 import uk.firedev.chatchannels.registry.ChatChannelRegistry;
@@ -15,7 +16,7 @@ public class MainConfig extends ConfigBase {
         super("config.yml", "config.yml", ChatChannels.getInstance());
     }
 
-    public static @NotNull MainConfig getInstance() {
+    public static @NonNull MainConfig getInstance() {
         return instance;
     }
 

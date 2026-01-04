@@ -22,8 +22,6 @@ dependencies {
     compileOnly(libs.paper.api)
     compileOnly(libs.daisylib)
     compileOnly(libs.discordsrv)
-
-    implementation(libs.commandapi)
 }
 
 group = "uk.firedev"
@@ -35,7 +33,7 @@ paper {
     name = project.name
     version = project.version.toString()
     main = "uk.firedev.chatchannels.ChatChannels"
-    apiVersion = "1.21.10"
+    apiVersion = "1.21.11"
     author = "FireML"
     description = project.description.toString()
 
@@ -101,8 +99,6 @@ tasks {
         archiveBaseName.set(project.name)
         archiveVersion.set(project.version.toString())
         archiveClassifier.set("")
-
-        relocate("dev.jorel.commandapi", "uk.firedev.chatchannels.libs.commandapi")
     }
     withType<JavaCompile> {
         options.encoding = "UTF-8"

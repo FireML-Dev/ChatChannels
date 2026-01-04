@@ -12,7 +12,6 @@ dependencyResolutionManagement {
             library("discordsrv", "com.discordsrv:discordsrv:1.30.3")
 
             // implementation dependencies
-            library("commandapi", "dev.jorel:commandapi-paper-shade:11.1.0")
 
             // paperLibrary dependencies
 

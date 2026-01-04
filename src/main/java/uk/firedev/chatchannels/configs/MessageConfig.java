@@ -1,6 +1,7 @@
 package uk.firedev.chatchannels.configs;
 
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import uk.firedev.chatchannels.ChatChannels;
 import uk.firedev.chatchannels.api.ChatChannel;
 import uk.firedev.daisylib.config.ConfigBase;
@@ -16,49 +17,49 @@ public class MessageConfig extends ConfigBase {
         super("messages.yml", "messages.yml", ChatChannels.getInstance());
     }
 
-    public static @NotNull MessageConfig getInstance() {
+    public static @NonNull MessageConfig getInstance() {
         return instance;
     }
 
     // Prefix
 
-    public @NotNull ComponentSingleMessage getPrefix() {
+    public @NonNull ComponentSingleMessage getPrefix() {
         return getComponentMessage("prefix", "<gray>[ChatChannels]</gray> ").toSingleMessage();
     }
 
-    public @NotNull Replacer getPrefixReplacer() {
+    public @NonNull Replacer getPrefixReplacer() {
         return Replacer.replacer().addReplacement("{prefix}", getPrefix());
     }
 
     // Messages
 
-    public @NotNull ComponentMessage getReloadedMessage() {
+    public @NonNull ComponentMessage getReloadedMessage() {
         return getComponentMessage("reloaded", "{prefix}<aqua>Successfully reloaded the plugin.")
             .replace(getPrefixReplacer());
     }
 
-    public @NotNull ComponentMessage getJoinChannelMessage(@NotNull ChatChannel channel) {
+    public @NonNull ComponentMessage getJoinChannelMessage(@NonNull ChatChannel channel) {
         return getComponentMessage("join-channel", "{prefix}<aqua>You are now speaking in <gold>{channel}</gold> Chat")
             .replace(getPrefixReplacer())
             .replace("{channel}", channel.display());
     }
 
-    public @NotNull ComponentMessage getNoNearbyPlayersMessage() {
+    public @NonNull ComponentMessage getNoNearbyPlayersMessage() {
         return getComponentMessage("no-nearby-players", "{prefix}<red>There are no players within range.")
             .replace(getPrefixReplacer());
     }
 
-    public @NotNull ComponentMessage getNoAccessMessage() {
+    public @NonNull ComponentMessage getNoAccessMessage() {
         return getComponentMessage("no-access", "{prefix}<red>You cannot access that channel!")
             .replace(getPrefixReplacer());
     }
 
-    public @NotNull ComponentMessage getNoLongerExistsMessage() {
+    public @NonNull ComponentMessage getNoLongerExistsMessage() {
         return getComponentMessage("no-longer-exists", "{prefix}<red>The channel you were in no longer exists.")
             .replace(getPrefixReplacer());
     }
 
-    public @NotNull ComponentMessage getNotInChannelMessage() {
+    public @NonNull ComponentMessage getNotInChannelMessage() {
         return getComponentMessage("not-in-channel", "{prefix}<red>You are no longer in a chat channel.")
             .replace(getPrefixReplacer());
     }
