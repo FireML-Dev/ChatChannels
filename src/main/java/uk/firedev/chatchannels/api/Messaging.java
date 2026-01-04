@@ -1,12 +1,9 @@
 package uk.firedev.chatchannels.api;
 
-import github.scarsz.discordsrv.DiscordSRV;
-import github.scarsz.discordsrv.dependencies.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 import uk.firedev.chatchannels.ChatChannels;
 import uk.firedev.chatchannels.configs.MessageConfig;
@@ -40,18 +37,6 @@ public record Messaging(@NonNull ChatChannel channel) {
                 Component messageContent = processPing(player, sentMessage);
                 message.replace("{message}", messageContent).send(player);
             });
-
-            if (!Bukkit.getPluginManager().isPluginEnabled("DiscordSRV")) {
-                return;
-            }
-            DiscordSRV.getPlugin().processChatMessage(
-                sender,
-                // This needs to happen so we can use DiscordSRV's shaded adventure
-                GsonComponentSerializer.gson().deserialize(ComponentMessage.componentMessage(sentMessage).getAsJson()),
-                DiscordSRV.getPlugin().getOptionalChannel(channel.name()),
-                false,
-                null
-            );
         });
     }
 

@@ -9,7 +9,6 @@ dependencyResolutionManagement {
             // compileOnly dependencies
             library("daisylib", "uk.firedev:DaisyLib:3.0.0-SNAPSHOT")
             library("luckperms", "net.luckperms:api:5.4")
-            library("discordsrv", "com.discordsrv:discordsrv:1.30.3")
 
             // implementation dependencies
 
