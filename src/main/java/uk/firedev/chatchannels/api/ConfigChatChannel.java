@@ -27,20 +27,20 @@ public abstract class ConfigChatChannel extends ConfigBase implements ChatChanne
     private final List<String> commandAliases;
     private final @NonNull Requirement accessRequirement;
 
-    public ConfigChatChannel(@NonNull File file) throws ChannelLoadException {
-        super(file, null, ChatChannels.getInstance());
+    public ConfigChatChannel(@NonNull File file, @NonNull Plugin plugin) throws ChannelLoadException {
+        super(file, null, plugin);
         init();
         this.id = checkId();
         this.commandAliases = getConfig().getStringList("commands");
-        this.accessRequirement = new Requirement(getConfig().getConfigurationSection("requirements"), ChatChannels.getInstance());
+        this.accessRequirement = new Requirement(getConfig().getConfigurationSection("requirements"), plugin);
     }
 
-    public ConfigChatChannel(@NonNull String fileName, @NonNull String resourceName) throws ChannelLoadException {
-        super(fileName, resourceName, ChatChannels.getInstance());
+    public ConfigChatChannel(@NonNull String fileName, @NonNull String resourceName, @NonNull Plugin plugin) throws ChannelLoadException {
+        super(fileName, resourceName, plugin);
         init();
         this.id = checkId();
         this.commandAliases = getConfig().getStringList("commands");
-        this.accessRequirement = new Requirement(getConfig().getConfigurationSection("requirements"), ChatChannels.getInstance());
+        this.accessRequirement = new Requirement(getConfig().getConfigurationSection("requirements"), plugin);
     }
 
     private @NonNull String checkId() throws ChannelLoadException {

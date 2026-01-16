@@ -28,7 +28,7 @@ public class ChannelLoader {
         files.forEach(file -> {
             ConfigChatChannel channel;
             try {
-                channel = new ConfigChatChannel(file) {
+                channel = new ConfigChatChannel(file, ChatChannels.getInstance()) {
                     @Override
                     public boolean persistent() {
                         return false;
