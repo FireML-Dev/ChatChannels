@@ -2,10 +2,8 @@ package uk.firedev.chatchannels.channels;
 
 import org.jspecify.annotations.NonNull;
 import uk.firedev.daisylib.util.FileUtil;
-import org.jetbrains.annotations.NotNull;
 import uk.firedev.chatchannels.ChatChannels;
 import uk.firedev.chatchannels.api.ChannelLoadException;
-import uk.firedev.chatchannels.api.ConfigChatChannel;
 import uk.firedev.chatchannels.registry.ChatChannelRegistry;
 import uk.firedev.daisylib.util.Loggers;
 
@@ -29,7 +27,7 @@ public class ChannelLoader {
         files.forEach(file -> {
             ConfigChatChannel channel;
             try {
-                channel = new ConfigChatChannel(file, ChatChannels.getInstance());
+                channel = new ConfigChatChannel(file);
             } catch (ChannelLoadException exception) {
                 Loggers.warn(ChatChannels.getInstance().getComponentLogger(), "Failed to load channel " + file.getName(), exception);
                 return;

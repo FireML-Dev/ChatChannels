@@ -1,10 +1,14 @@
-package uk.firedev.chatchannels.api;
+package uk.firedev.chatchannels.channels;
 
 import net.kyori.adventure.sound.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
+import uk.firedev.chatchannels.ChatChannels;
+import uk.firedev.chatchannels.api.ChannelLoadException;
+import uk.firedev.chatchannels.api.ChatChannel;
 import uk.firedev.daisylib.addons.requirement.Requirement;
 import uk.firedev.daisylib.config.ConfigBase;
 import uk.firedev.daisylib.libs.messagelib.message.ComponentMessage;
@@ -16,7 +20,7 @@ import java.io.File;
 import java.util.List;
 
 /**
- * Used for fetching chat channels from the config files.
+ * Used for internally fetching chat channels from the config files.
  */
 public class ConfigChatChannel extends ConfigBase implements ChatChannel {
 
@@ -26,20 +30,20 @@ public class ConfigChatChannel extends ConfigBase implements ChatChannel {
     private final List<String> commandAliases;
     private final @NonNull Requirement accessRequirement;
 
-    public ConfigChatChannel(@NonNull File file, @NonNull Plugin plugin) throws ChannelLoadException {
-        super(file, null, plugin);
+    public ConfigChatChannel(@NonNull File file) throws ChannelLoadException {
+        super(file, null, ChatChannels.getInstance());
         init();
         this.id = checkId();
         this.commandAliases = getConfig().getStringList("commands");
-        this.accessRequirement = new Requirement(getConfig().getConfigurationSection("requirements"), plugin);
+        this.accessRequirement = new Requirement(getConfig().getConfigurationSection("requirements"), ChatChannels.getInstance());
     }
 
-    public ConfigChatChannel(@NonNull String fileName, @NonNull String resourceName, @NonNull Plugin plugin) throws ChannelLoadException {
-        super(fileName, resourceName, plugin);
+    public ConfigChatChannel(@NonNull String fileName, @NonNull String resourceName) throws ChannelLoadException {
+        super(fileName, resourceName, ChatChannels.getInstance());
         init();
         this.id = checkId();
         this.commandAliases = getConfig().getStringList("commands");
-        this.accessRequirement = new Requirement(getConfig().getConfigurationSection("requirements"), plugin);
+        this.accessRequirement = new Requirement(getConfig().getConfigurationSection("requirements"), ChatChannels.getInstance());
     }
 
     private @NonNull String checkId() throws ChannelLoadException {
