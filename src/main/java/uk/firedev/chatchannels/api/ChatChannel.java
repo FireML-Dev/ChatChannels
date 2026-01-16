@@ -144,7 +144,6 @@ public interface ChatChannel extends RegistryItem {
         if (aliases.isEmpty()) {
             return;
         }
-        Loggers.info(ChatChannels.getInstance().getComponentLogger(), "Registering aliases. The server may reload a few times.");
         aliases.forEach(alias -> registerAlias(alias, registrar));
     }
 

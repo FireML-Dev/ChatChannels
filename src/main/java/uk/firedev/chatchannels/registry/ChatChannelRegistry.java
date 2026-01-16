@@ -1,5 +1,6 @@
 package uk.firedev.chatchannels.registry;
 
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
@@ -34,10 +35,7 @@ public class ChatChannelRegistry implements Registry<ChatChannel> {
             return false;
         }
         registry.put(name, channel);
-        // If the plugin is not currently loading, reload.
-        if (!plugin.isLoading()) {
-            plugin.reload();
-        }
+        plugin.reloadServerForCommands();
         Loggers.info(ChatChannels.getInstance().getComponentLogger(), "Registered ChatChannel " + name);
         return true;
     }

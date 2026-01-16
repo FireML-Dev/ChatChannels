@@ -3,6 +3,10 @@ package uk.firedev.chatchannels;
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import org.bukkit.Bukkit;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
+import org.bukkit.event.server.ServerLoadEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jspecify.annotations.NonNull;
 import uk.firedev.chatchannels.commands.ChatCommand;
@@ -10,12 +14,14 @@ import uk.firedev.chatchannels.commands.MainCommand;
 import uk.firedev.chatchannels.configs.MainConfig;
 import uk.firedev.chatchannels.configs.MessageConfig;
 import uk.firedev.chatchannels.registry.ChatChannelRegistry;
+import uk.firedev.daisylib.util.Loggers;
 
 public final class ChatChannels extends JavaPlugin {
 
     private static ChatChannels INSTANCE;
 
     private boolean loading = true;
+    private boolean allowServerReload = false;
 
     public ChatChannels() {
         if (INSTANCE != null) {
@@ -38,6 +44,7 @@ public final class ChatChannels extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        getServer().getPluginManager().registerEvents(new StartupListener(), this);
         ChatChannelRegistry.getInstance().init(this);
         // Do this after, as we need the channel registry to be full.
         registerCommands();
@@ -66,12 +73,39 @@ public final class ChatChannels extends JavaPlugin {
         MainConfig.getInstance().reload();
         MessageConfig.getInstance().reload();
         ChatChannelRegistry.getInstance().reload();
-        Bukkit.reloadData();
+        reloadServerForCommands();
         this.loading = false;
     }
 
     public boolean isLoading() {
         return this.loading;
+    }
+
+    public void reloadServerForCommands() {
+        if (allowServerReload && !loading) {
+            Loggers.info(getLogger(), "Reloading the server to register missing commands.");
+            Bukkit.reloadData();
+        }
+    }
+
+    // Listens for ServerLoadEvent to determine whether we can use Bukkit#reloadData.
+    class StartupListener implements Listener {
+
+        @EventHandler
+        public void onLoad(ServerLoadEvent event) {
+            if (event.getType() == ServerLoadEvent.LoadType.STARTUP) {
+                allowServerReload = true;
+                Bukkit.getScheduler().runTaskLater(
+                    ChatChannels.INSTANCE,
+                    () -> {
+                        reloadServerForCommands();
+                        HandlerList.unregisterAll(this);
+                    },
+                    5L
+                );
+            }
+        }
+
     }
 
 }
