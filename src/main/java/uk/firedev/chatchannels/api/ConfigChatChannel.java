@@ -1,14 +1,11 @@
-package uk.firedev.chatchannels.channels;
+package uk.firedev.chatchannels.api;
 
 import net.kyori.adventure.sound.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 import uk.firedev.chatchannels.ChatChannels;
-import uk.firedev.chatchannels.api.ChannelLoadException;
-import uk.firedev.chatchannels.api.ChatChannel;
 import uk.firedev.daisylib.addons.requirement.Requirement;
 import uk.firedev.daisylib.config.ConfigBase;
 import uk.firedev.daisylib.libs.messagelib.message.ComponentMessage;
@@ -20,9 +17,9 @@ import java.io.File;
 import java.util.List;
 
 /**
- * Used for internally fetching chat channels from the config files.
+ * Used for fetching chat channels from the config files.
  */
-public class ConfigChatChannel extends ConfigBase implements ChatChannel {
+public abstract class ConfigChatChannel extends ConfigBase implements ChatChannel {
 
     protected final CooldownHelper pingCooldown = CooldownHelper.cooldownHelper();
 
@@ -128,11 +125,6 @@ public class ConfigChatChannel extends ConfigBase implements ChatChannel {
     @Override
     public @NonNull List<String> aliases() {
         return commandAliases;
-    }
-
-    @Override
-    public boolean persistent() {
-        return false;
     }
 
 }

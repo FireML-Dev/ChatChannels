@@ -1,6 +1,7 @@
 package uk.firedev.chatchannels.channels;
 
 import org.jspecify.annotations.NonNull;
+import uk.firedev.chatchannels.api.ConfigChatChannel;
 import uk.firedev.daisylib.util.FileUtil;
 import uk.firedev.chatchannels.ChatChannels;
 import uk.firedev.chatchannels.api.ChannelLoadException;
@@ -27,7 +28,12 @@ public class ChannelLoader {
         files.forEach(file -> {
             ConfigChatChannel channel;
             try {
-                channel = new ConfigChatChannel(file);
+                channel = new ConfigChatChannel(file) {
+                    @Override
+                    public boolean persistent() {
+                        return false;
+                    }
+                };
             } catch (ChannelLoadException exception) {
                 Loggers.warn(ChatChannels.getInstance().getComponentLogger(), "Failed to load channel " + file.getName(), exception);
                 return;

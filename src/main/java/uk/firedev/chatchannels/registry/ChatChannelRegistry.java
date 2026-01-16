@@ -6,11 +6,13 @@ import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 import uk.firedev.chatchannels.ChatChannels;
 import uk.firedev.chatchannels.api.ChatChannel;
+import uk.firedev.chatchannels.api.ConfigChatChannel;
 import uk.firedev.chatchannels.channels.ChannelLoader;
 import uk.firedev.chatchannels.configs.MainConfig;
 import uk.firedev.daisylib.registry.Registry;
 import uk.firedev.daisylib.util.Loggers;
 
+import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -61,7 +63,21 @@ public class ChatChannelRegistry implements Registry<ChatChannel> {
     }
 
     private void cleanRegistry() {
-        registry.values().removeIf(channel -> !channel.persistent());
+        Iterator<ChatChannel> iterator = registry.values().iterator();
+        while (iterator.hasNext()) {
+            ChatChannel channel = iterator.next();
+
+            // Non-persistent channels are removed
+            if (!channel.persistent()) {
+                iterator.remove();
+                continue;
+            }
+
+            // Persistent config channels are reloaded
+            if (channel instanceof ConfigChatChannel config) {
+                config.reload();
+            }
+        }
     }
 
     public @NonNull Map<String, ChatChannel> getRegistry() {

@@ -179,8 +179,6 @@ public interface ChatChannel extends RegistryItem {
         registrar.register(command);
     }
 
-    default boolean persistent() {
-        return true;
-    }
+    boolean persistent();
 
 }
