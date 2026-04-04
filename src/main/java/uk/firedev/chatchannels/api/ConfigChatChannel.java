@@ -3,7 +3,7 @@ package uk.firedev.chatchannels.api;
 import net.kyori.adventure.sound.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 import uk.firedev.daisylib.addons.requirement.Requirement;
 import uk.firedev.daisylib.config.ConfigBase;

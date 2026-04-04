@@ -1,28 +1,28 @@
 package uk.firedev.chatchannels.api.events;
 
-import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.ApiStatus;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import uk.firedev.chatchannels.api.ChatChannel;
 
-public class ChatChannelsChatEvent extends Event implements Cancellable {
+public class ChatChannelsSwitchChannelEvent extends Event implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
 
-    private final ChatChannel channel;
-    private final Player sender;
-    private Component message;
+    private final ChatChannel to;
+    private final ChatChannel from;
+    private final Player player;
     private boolean cancel;
 
     @ApiStatus.Internal
-    public ChatChannelsChatEvent(@NonNull ChatChannel channel, @NonNull Player sender, @NonNull Component message) {
-        this.channel = channel;
-        this.sender = sender;
-        this.message = message;
+    public ChatChannelsSwitchChannelEvent(@Nullable ChatChannel to, @Nullable ChatChannel from, @NonNull Player player) {
+        this.to = to;
+        this.from = from;
+        this.player = player;
     }
 
     public static HandlerList getHandlerList() {
@@ -34,21 +34,18 @@ public class ChatChannelsChatEvent extends Event implements Cancellable {
         return handlers;
     }
 
-    public @NonNull ChatChannel channel() {
-        return this.channel;
+    public @Nullable ChatChannel to() {
+        return this.to;
     }
 
-    public @NonNull Player sender() {
-        return this.sender;
+    public @Nullable ChatChannel from() {
+        return this.from;
     }
 
-    public @NonNull Component message() {
-        return this.message;
+    public @NonNull Player player() {
+        return this.player;
     }
 
-    public void message(@NonNull Component message) {
-        this.message = message;
-    }
 
     @Override
     public boolean isCancelled() {

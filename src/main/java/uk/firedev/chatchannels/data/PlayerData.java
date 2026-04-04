@@ -41,6 +41,11 @@ public record PlayerData(@NonNull Player player) {
     }
 
     public void setActiveChannel(@Nullable ChatChannel channel) {
+        ChatChannelsSwitchChannelEvent ccsce = new ChatChannelsSwitchChannelEvent(channel, getActiveChannel(), player);
+        if (!ccsce.callEvent()) {
+            return;
+        }
+
         PersistentDataContainer pdc = player.getPersistentDataContainer();
         if (channel == null) {
             pdc.remove(CHANNEL_KEY);
