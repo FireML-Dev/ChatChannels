@@ -13,38 +13,25 @@ import uk.firedev.daisylib.libs.messagelib.message.ComponentSingleMessage;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 public record Messaging(@NonNull ChatChannel channel) {
 
     public void sendMessage(@NonNull Player sender, @NonNull Component sentMessage, @NonNull ComponentSingleMessage message) {
         Bukkit.getScheduler().runTask(ChatChannels.getInstance(), () -> {
-            Optional<Collection<? extends Player>> targetPlayers = handleRadius(sender);
-            if (targetPlayers.isEmpty()) {
-                return;
-            }
-            message.replace("{message}", sentMessage).send(sender, Bukkit.getConsoleSender());
-            targetPlayers.get().forEach(player -> {
-                // Don't send to sender
-                if (player.equals(sender)) {
-                    return;
-                }
-                // Check if the message should be sent
-                if (!channel.shouldSendToTarget(sender, player)) {
-                    return;
-                }
-                // Checks for mentions/pings
-                Component messageContent = processPing(player, sentMessage);
-                message.replace("{message}", messageContent).send(player);
-            });
+            handleRadius(sender).stream()
+                .filter(player -> channel.shouldSendToTarget(sender, player))
+                .forEach(player -> {
+                    Component msg = message.replace("{message}", processPing(player, sentMessage)).get();
+                    player.sendMessage(msg);
+                });
         });
     }
 
-        public Optional<Collection<? extends Player>> handleRadius(@NonNull Player sender) {
+    public Collection<? extends Player> handleRadius(@NonNull Player sender) {
         long radius = channel.radius();
         // If the radius is 0 or less, we can just pass all online players
         if (radius <= 0) {
-            return Optional.of(Bukkit.getOnlinePlayers());
+            return Bukkit.getOnlinePlayers();
         }
         List<Player> players = sender.getNearbyEntities(radius, radius, radius).stream()
             .filter(entity -> entity instanceof Player)
@@ -52,9 +39,9 @@ public record Messaging(@NonNull ChatChannel channel) {
             .toList();
         if (players.isEmpty()) {
             MessageConfig.getInstance().getNoNearbyPlayersMessage().send(sender);
-            return Optional.empty();
+            return List.of();
         }
-        return Optional.of(players);
+        return players;
     }
 
     private Component processPing(@NonNull Player player, @NonNull Component component) {
