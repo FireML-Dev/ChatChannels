@@ -25,13 +25,13 @@ dependencies {
 group = "uk.firedev"
 version = properties["project-version"] as String
 description = "A library that allows external plugins to register custom chat channels"
-java.sourceCompatibility = JavaVersion.VERSION_21
+java.sourceCompatibility = JavaVersion.VERSION_25
 
 paper {
     name = project.name
     version = project.version.toString()
     main = "uk.firedev.chatchannels.ChatChannels"
-    apiVersion = "1.21.11"
+    apiVersion = "26.1"
     author = "FireML"
     description = project.description.toString()
 
