@@ -18,16 +18,21 @@ public record Messaging(@NonNull ChatChannel channel) {
 
     public void sendMessage(@NonNull Player sender, @NonNull Component sentMessage, @NonNull ComponentSingleMessage message) {
         Bukkit.getScheduler().runTask(ChatChannels.getInstance(), () -> {
+            Component hand = sender.getInventory().getItemInMainHand().displayName();
+            ComponentSingleMessage sent = ComponentMessage.componentMessage(sentMessage)
+                .replace("[i]", hand)
+                .replace("[item]", hand);
+
             handleRadius(sender).stream()
                 .filter(player -> channel.shouldSendToTarget(sender, player))
                 .forEach(player -> {
-                    Component msg = message.replace("{message}", processPing(player, sentMessage)).get();
+                    Component msg = message.replace("{message}", processPing(player, sent)).get();
                     player.sendMessage(msg);
                 });
         });
     }
 
-    public Collection<? extends Player> handleRadius(@NonNull Player sender) {
+    private Collection<? extends Player> handleRadius(@NonNull Player sender) {
         long radius = channel.radius();
         // If the radius is 0 or less, we can just pass all online players
         if (radius <= 0) {
@@ -44,11 +49,10 @@ public record Messaging(@NonNull ChatChannel channel) {
         return players;
     }
 
-    private Component processPing(@NonNull Player player, @NonNull Component component) {
+    private Component processPing(@NonNull Player player, @NonNull ComponentSingleMessage message) {
         if (!channel.enablePing() || channel.pingCooldownHandler().has(player.getUniqueId())) {
-            return component;
+            return message.get();
         }
-        ComponentSingleMessage message = ComponentMessage.componentMessage(component);
         String pingFormat = "@" + player.getName();
         if (message.containsString(pingFormat)) {
             message = message.replace(pingFormat, "<red>@" + player.getName());
@@ -57,9 +61,8 @@ public record Messaging(@NonNull ChatChannel channel) {
                 player.playSound(pingSound);
             }
             channel.pingCooldownHandler().apply(player.getUniqueId(), Duration.ofSeconds(channel.pingCooldown()));
-            return message.get();
         }
-        return component;
+        return message.get();
     }
 
 }
