@@ -28,12 +28,7 @@ public class ChannelLoader {
         files.forEach(file -> {
             ConfigChatChannel channel;
             try {
-                channel = new ConfigChatChannel(file, ChatChannels.getInstance()) {
-                    @Override
-                    public boolean persistent() {
-                        return false;
-                    }
-                };
+                channel = new ConfigChatChannel(file, ChatChannels.getInstance(), false);
             } catch (ChannelLoadException exception) {
                 Loggers.warn(ChatChannels.getInstance().getComponentLogger(), "Failed to load channel " + file.getName(), exception);
                 return;

@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
-import uk.firedev.chatchannels.ChatChannels;
 import uk.firedev.daisylib.addons.requirement.Requirement;
 import uk.firedev.daisylib.config.ConfigBase;
 import uk.firedev.daisylib.libs.messagelib.message.ComponentMessage;
@@ -19,28 +18,32 @@ import java.util.List;
 /**
  * Used for fetching chat channels from the config files.
  */
-public abstract class ConfigChatChannel extends ConfigBase implements ChatChannel {
+public class ConfigChatChannel extends ConfigBase implements ChatChannel {
 
     protected final CooldownHelper pingCooldown = CooldownHelper.cooldownHelper();
 
+    private final Plugin plugin;
     private final @NonNull String id;
     private final List<String> commandAliases;
     private final @NonNull Requirement accessRequirement;
+    private final boolean persistent;
 
-    public ConfigChatChannel(@NonNull File file, @NonNull Plugin plugin) throws ChannelLoadException {
-        super(file, null, plugin);
-        init();
+    public ConfigChatChannel(@NonNull File file, @NonNull Plugin plugin, boolean persistent) throws ChannelLoadException {
+        super(file);
+        this.plugin = plugin;
         this.id = checkId();
         this.commandAliases = getConfig().getStringList("commands");
         this.accessRequirement = new Requirement(getConfig().getConfigurationSection("requirements"), plugin);
+        this.persistent = persistent;
     }
 
-    public ConfigChatChannel(@NonNull String fileName, @NonNull String resourceName, @NonNull Plugin plugin) throws ChannelLoadException {
+    public ConfigChatChannel(@NonNull String fileName, @NonNull String resourceName, @NonNull Plugin plugin, boolean persistent) throws ChannelLoadException {
         super(fileName, resourceName, plugin);
-        init();
+        this.plugin = plugin;
         this.id = checkId();
         this.commandAliases = getConfig().getStringList("commands");
         this.accessRequirement = new Requirement(getConfig().getConfigurationSection("requirements"), plugin);
+        this.persistent = persistent;
     }
 
     private @NonNull String checkId() throws ChannelLoadException {
@@ -63,7 +66,12 @@ public abstract class ConfigChatChannel extends ConfigBase implements ChatChanne
 
     @Override
     public final @NonNull Plugin plugin() {
-        return getPlugin();
+        return this.plugin;
+    }
+
+    @Override
+    public final @NonNull Plugin getPlugin() {
+        return this.plugin;
     }
 
     @Override
@@ -125,6 +133,11 @@ public abstract class ConfigChatChannel extends ConfigBase implements ChatChanne
     @Override
     public @NonNull List<String> aliases() {
         return commandAliases;
+    }
+
+    @Override
+    public final boolean persistent() {
+        return this.persistent;
     }
 
 }
