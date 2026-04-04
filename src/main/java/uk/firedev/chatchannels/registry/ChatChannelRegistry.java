@@ -1,7 +1,5 @@
 package uk.firedev.chatchannels.registry;
 
-import org.bukkit.Bukkit;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 import uk.firedev.chatchannels.ChatChannels;

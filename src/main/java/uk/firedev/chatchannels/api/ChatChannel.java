@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
-import uk.firedev.chatchannels.ChatChannels;
 import uk.firedev.chatchannels.configs.MessageConfig;
 import uk.firedev.chatchannels.data.PlayerData;
 import uk.firedev.chatchannels.registry.ChatChannelRegistry;
@@ -23,7 +22,6 @@ import uk.firedev.daisylib.libs.messagelib.message.ComponentSingleMessage;
 import uk.firedev.daisylib.libs.messagelib.replacer.Replacer;
 import uk.firedev.daisylib.registry.RegistryItem;
 import uk.firedev.daisylib.util.CooldownHelper;
-import uk.firedev.daisylib.util.Loggers;
 
 import java.util.List;
 

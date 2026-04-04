@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
 import uk.firedev.chatchannels.ChatChannels;
+import uk.firedev.chatchannels.api.events.ChatChannelsChatEvent;
 import uk.firedev.chatchannels.configs.MessageConfig;
 import uk.firedev.daisylib.libs.messagelib.message.ComponentMessage;
 import uk.firedev.daisylib.libs.messagelib.message.ComponentSingleMessage;
@@ -18,8 +19,14 @@ public record Messaging(@NonNull ChatChannel channel) {
 
     public void sendMessage(@NonNull Player sender, @NonNull Component sentMessage, @NonNull ComponentSingleMessage message) {
         Bukkit.getScheduler().runTask(ChatChannels.getInstance(), () -> {
+            ChatChannelsChatEvent ccce = new ChatChannelsChatEvent(channel, sender, sentMessage);
+            // Event cancelled
+            if (!ccce.callEvent()) {
+                return;
+            }
+
             Component hand = sender.getInventory().getItemInMainHand().displayName();
-            ComponentSingleMessage sent = ComponentMessage.componentMessage(sentMessage)
+            ComponentSingleMessage sent = ComponentMessage.componentMessage(ccce.message())
                 .replace("[i]", hand)
                 .replace("[item]", hand);
 

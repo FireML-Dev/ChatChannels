@@ -1,11 +1,11 @@
 package uk.firedev.chatchannels.channels;
 
 import org.jspecify.annotations.NonNull;
-import uk.firedev.chatchannels.api.ConfigChatChannel;
-import uk.firedev.daisylib.util.FileUtil;
 import uk.firedev.chatchannels.ChatChannels;
 import uk.firedev.chatchannels.api.ChannelLoadException;
+import uk.firedev.chatchannels.api.ConfigChatChannel;
 import uk.firedev.chatchannels.registry.ChatChannelRegistry;
+import uk.firedev.daisylib.util.FileUtil;
 import uk.firedev.daisylib.util.Loggers;
 
 import java.io.File;
