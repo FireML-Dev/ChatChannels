@@ -119,16 +119,6 @@ public class ConfigChatChannel extends ConfigBase implements ChatChannel {
         return hasAccess(target);
     }
 
-    /**
-     * @param sender The sender string who sent the message.
-     * @param target The player who is receiving the message.
-     * @return If the target player should receive the message.
-     */
-    @Override
-    public boolean shouldSendToTarget(@NonNull String sender, @NonNull Player target) {
-        return true;
-    }
-
     @Nullable
     @Override
     public Replacer replacer(@NonNull Player player) {

@@ -10,7 +10,6 @@ import uk.firedev.chatchannels.api.events.ChatChannelsChatEvent;
 import uk.firedev.chatchannels.configs.MessageConfig;
 import uk.firedev.daisylib.libs.messagelib.message.ComponentMessage;
 import uk.firedev.daisylib.libs.messagelib.message.ComponentSingleMessage;
-import uk.firedev.daisylib.util.Loggers;
 
 import java.time.Duration;
 import java.util.Collection;
@@ -32,28 +31,6 @@ public record Messaging(@NonNull ChatChannel channel) {
                 .replace("[item]", hand);
 
             handleRadius(sender).stream()
-                .filter(player -> channel.shouldSendToTarget(sender, player))
-                .forEach(player -> {
-                    Component msg = message.replace("{message}", processPing(player, sent)).get();
-                    player.sendMessage(msg);
-                });
-        });
-    }
-
-    public void sendMessage(@NonNull String sender, @NonNull Component sentMessage, @NonNull ComponentSingleMessage message) {
-        Bukkit.getScheduler().runTask(ChatChannels.getInstance(), () -> {
-            ChatChannelsChatEvent ccce = new ChatChannelsChatEvent(channel, null, sentMessage);
-            // Event cancelled
-            if (!ccce.callEvent()) {
-                return;
-            }
-            if (channel.radius() > 0) {
-                Loggers.warn(ChatChannels.getInstance().getLogger(), "Channel " + channel.name() + " has a radius. Cannot send a message without a sender player.");
-                return;
-            }
-
-            ComponentSingleMessage sent = ComponentMessage.componentMessage(sentMessage);
-            Bukkit.getOnlinePlayers().stream()
                 .filter(player -> channel.shouldSendToTarget(sender, player))
                 .forEach(player -> {
                     Component msg = message.replace("{message}", processPing(player, sent)).get();
@@ -84,7 +61,7 @@ public record Messaging(@NonNull ChatChannel channel) {
             return message.get();
         }
         String pingFormat = "@" + player.getName();
-        if (message.contains(pingFormat)) {
+        if (message.containsString(pingFormat)) {
             message = message.replace(pingFormat, "<red>@" + player.getName());
             Sound pingSound = channel.pingSound();
             if (pingSound != null) {
