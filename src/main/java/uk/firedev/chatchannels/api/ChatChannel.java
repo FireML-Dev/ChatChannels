@@ -98,11 +98,6 @@ public interface ChatChannel extends RegistryItem {
         new Messaging(this).sendMessage(sender, component, message);
     }
 
-    default void sendMessage(@NonNull String sender, @NonNull Component component) {
-        ComponentSingleMessage message = format().replace("{name}", sender);
-        new Messaging(this).sendMessage(sender, component, message);
-    }
-
     /**
      * @param player The player who sent the message.
      * @param target The player who is receiving the message.
