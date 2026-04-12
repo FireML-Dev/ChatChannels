@@ -7,6 +7,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.ApiStatus;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import uk.firedev.chatchannels.api.ChatChannel;
 
 public class ChatChannelsChatEvent extends Event implements Cancellable {
@@ -19,7 +20,7 @@ public class ChatChannelsChatEvent extends Event implements Cancellable {
     private boolean cancel;
 
     @ApiStatus.Internal
-    public ChatChannelsChatEvent(@NonNull ChatChannel channel, @NonNull Player sender, @NonNull Component message) {
+    public ChatChannelsChatEvent(@NonNull ChatChannel channel, @Nullable Player sender, @NonNull Component message) {
         this.channel = channel;
         this.sender = sender;
         this.message = message;
@@ -38,7 +39,7 @@ public class ChatChannelsChatEvent extends Event implements Cancellable {
         return this.channel;
     }
 
-    public @NonNull Player sender() {
+    public @Nullable Player sender() {
         return this.sender;
     }
 

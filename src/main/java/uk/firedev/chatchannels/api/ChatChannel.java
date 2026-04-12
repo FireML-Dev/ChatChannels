@@ -7,6 +7,7 @@ import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jspecify.annotations.Nullable;
@@ -104,6 +105,13 @@ public interface ChatChannel extends RegistryItem {
      * @return If the target player should receive the message.
      */
     boolean shouldSendToTarget(@NonNull Player player, @NonNull Player target);
+
+    /**
+     * @param sender The sender string who sent the message.
+     * @param target The player who is receiving the message.
+     * @return If the target player should receive the message.
+     */
+    boolean shouldSendToTarget(@NonNull String sender, @NonNull Player target);
 
     /**
      * @param player The relevant player.
