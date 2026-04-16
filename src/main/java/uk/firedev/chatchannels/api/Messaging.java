@@ -30,6 +30,7 @@ public record Messaging(@NonNull ChatChannel channel) {
                 .replace("[i]", hand)
                 .replace("[item]", hand);
 
+            message.replace("{message}", sent).send(Bukkit.getConsoleSender());
             handleRadius(sender).stream()
                 .filter(player -> channel.shouldSendToTarget(sender, player))
                 .forEach(player -> {
