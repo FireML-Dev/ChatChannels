@@ -61,7 +61,7 @@ public record Messaging(@NonNull ChatChannel channel) {
             return message.get();
         }
         String pingFormat = "@" + player.getName();
-        if (message.containsString(pingFormat)) {
+        if (message.contains(pingFormat)) {
             message = message.replace(pingFormat, "<red>@" + player.getName());
             Sound pingSound = channel.pingSound();
             if (pingSound != null) {
