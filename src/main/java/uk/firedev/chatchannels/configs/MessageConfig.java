@@ -15,6 +15,11 @@ public class MessageConfig extends BasicConfig {
         super("messages.yml", "messages.yml", ChatChannels.get());
     }
 
+    @Override
+    public boolean copyDefaults() {
+        return true;
+    }
+
     public static @NonNull MessageConfig getInstance() {
         return instance;
     }

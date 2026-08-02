@@ -16,6 +16,11 @@ public class MainConfig extends BasicConfig {
         super("config.yml", "config.yml", ChatChannels.get());
     }
 
+    @Override
+    public boolean copyDefaults() {
+        return true;
+    }
+
     public static @NonNull MainConfig getInstance() {
         return instance;
     }
