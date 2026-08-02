@@ -14,6 +14,7 @@ import uk.firedev.chatchannels.commands.MainCommand;
 import uk.firedev.chatchannels.configs.MainConfig;
 import uk.firedev.chatchannels.configs.MessageConfig;
 import uk.firedev.chatchannels.registry.ChatChannelRegistry;
+import uk.firedev.daisylib.DaisyLib;
 import uk.firedev.daisylib.logging.Logging;
 
 public final class ChatChannels extends JavaPlugin {
@@ -53,6 +54,7 @@ public final class ChatChannels extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        DaisyLib.get().init(this);
         getServer().getPluginManager().registerEvents(new StartupListener(), this);
         ChatChannelRegistry.getInstance().init(this);
         // Do this after, as we need the channel registry to be full.
