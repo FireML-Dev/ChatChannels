@@ -39,13 +39,6 @@ paper {
     loader = "uk.firedev.chatchannels.LibraryLoader"
     generateLibrariesJson = true
 
-    serverDependencies {
-        register("DaisyLib") {
-            required = true
-            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
-        }
-    }
-
     permissions {
         register("chatchannels.command") {
             default = BukkitPluginDescription.Permission.Default.OP

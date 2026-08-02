@@ -4,15 +4,15 @@ dependencyResolutionManagement {
     versionCatalogs {
         create("libs") {
             // Paper API
-            library("paper-api", "io.papermc.paper:paper-api:26.1.1.build.+")
+            library("paper-api", "io.papermc.paper:paper-api:26.2.build.+")
 
             // compileOnly dependencies
-            library("daisylib", "uk.firedev:DaisyLib:4.0-SNAPSHOT")
             library("luckperms", "net.luckperms:api:5.4")
 
             // implementation dependencies
 
             // paperLibrary dependencies
+            library("daisylib", "uk.firedev:DaisyLib:4.0-SNAPSHOT")
 
             // Gradle plugins
             plugin("shadow", "com.gradleup.shadow").version("9.2.2")
