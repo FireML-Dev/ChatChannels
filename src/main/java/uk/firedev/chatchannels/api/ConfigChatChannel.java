@@ -3,14 +3,15 @@ package uk.firedev.chatchannels.api;
 import net.kyori.adventure.sound.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.jspecify.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
-import uk.firedev.daisylib.addons.requirement.Requirement;
-import uk.firedev.daisylib.config.ConfigBase;
-import uk.firedev.daisylib.libs.messagelib.message.ComponentMessage;
-import uk.firedev.daisylib.libs.messagelib.message.ComponentSingleMessage;
-import uk.firedev.daisylib.libs.messagelib.replacer.Replacer;
-import uk.firedev.daisylib.util.CooldownHelper;
+import org.jspecify.annotations.Nullable;
+import uk.firedev.daisylib.addons.requirement.RequirementChecker;
+import uk.firedev.daisylib.config.BasicConfig;
+import uk.firedev.daisylib.config.serializer.SoundSerializer;
+import uk.firedev.daisylib.messages.message.ComponentMessage;
+import uk.firedev.daisylib.messages.message.ComponentSingleMessage;
+import uk.firedev.daisylib.messages.replacer.Replacer;
+import uk.firedev.daisylib.utils.CooldownHelper;
 
 import java.io.File;
 import java.util.List;
@@ -18,22 +19,22 @@ import java.util.List;
 /**
  * Used for fetching chat channels from the config files.
  */
-public class ConfigChatChannel extends ConfigBase implements ChatChannel {
+public class ConfigChatChannel extends BasicConfig implements ChatChannel {
 
     protected final CooldownHelper pingCooldown = CooldownHelper.cooldownHelper();
 
     private final Plugin plugin;
     private final @NonNull String id;
     private final List<String> commandAliases;
-    private final @NonNull Requirement accessRequirement;
+    private final @NonNull RequirementChecker accessRequirement;
     private final boolean persistent;
 
     public ConfigChatChannel(@NonNull File file, @NonNull Plugin plugin, boolean persistent) throws ChannelLoadException {
-        super(file);
+        super(file, plugin);
         this.plugin = plugin;
         this.id = checkId();
         this.commandAliases = getConfig().getStringList("commands");
-        this.accessRequirement = new Requirement(getConfig().getConfigurationSection("requirements"), plugin);
+        this.accessRequirement = new RequirementChecker(getConfig().getConfigurationSection("requirements"));
         this.persistent = persistent;
     }
 
@@ -42,7 +43,7 @@ public class ConfigChatChannel extends ConfigBase implements ChatChannel {
         this.plugin = plugin;
         this.id = checkId();
         this.commandAliases = getConfig().getStringList("commands");
-        this.accessRequirement = new Requirement(getConfig().getConfigurationSection("requirements"), plugin);
+        this.accessRequirement = new RequirementChecker(getConfig().getConfigurationSection("requirements"));
         this.persistent = persistent;
     }
 
@@ -70,11 +71,6 @@ public class ConfigChatChannel extends ConfigBase implements ChatChannel {
     }
 
     @Override
-    public final @NonNull Plugin getPlugin() {
-        return this.plugin;
-    }
-
-    @Override
     public @NonNull ComponentSingleMessage display() {
         return ComponentMessage.componentMessage(getConfig().getString("display", name()));
     }
@@ -86,7 +82,8 @@ public class ConfigChatChannel extends ConfigBase implements ChatChannel {
 
     @Override
     public @Nullable Sound pingSound() {
-        return getSound("ping.sound");
+        String sound = getConfig().getString("ping.sound");
+        return SoundSerializer.get().deserialize(sound);
     }
 
     @Override
@@ -100,7 +97,7 @@ public class ConfigChatChannel extends ConfigBase implements ChatChannel {
     }
 
     @Override
-    public @NonNull Requirement accessRequirement() {
+    public @NonNull RequirementChecker accessRequirement() {
         return accessRequirement;
     }
 
@@ -110,8 +107,7 @@ public class ConfigChatChannel extends ConfigBase implements ChatChannel {
 
     @Override
     public @NonNull ComponentSingleMessage format() {
-        ComponentMessage message = ComponentMessage.componentMessage(getMessageLoader(), "format");
-        return message == null ? defaultFormat() : message.toSingleMessage();
+        return getComponentMessage("format", defaultFormat()).toSingleMessage();
     }
 
     @Override

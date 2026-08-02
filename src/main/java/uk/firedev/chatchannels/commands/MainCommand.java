@@ -19,7 +19,7 @@ public class MainCommand {
     private static ArgumentBuilder<CommandSourceStack, ?> reload() {
         return Commands.literal("reload")
             .executes(ctx -> {
-                ChatChannels.getInstance().reload();
+                ChatChannels.get().reload();
                 MessageConfig.getInstance().getReloadedMessage().send(ctx.getSource().getSender());
                 return 1;
             });

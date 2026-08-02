@@ -8,7 +8,6 @@ import uk.firedev.chatchannels.api.ConfigChatChannel;
 import uk.firedev.chatchannels.channels.ChannelLoader;
 import uk.firedev.chatchannels.configs.MainConfig;
 import uk.firedev.daisylib.registry.Registry;
-import uk.firedev.daisylib.util.Loggers;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -18,7 +17,7 @@ public class ChatChannelRegistry implements Registry<ChatChannel> {
 
     private static final ChatChannelRegistry instance = new ChatChannelRegistry();
 
-    private final ChatChannels plugin = ChatChannels.getInstance();
+    private final ChatChannels plugin = ChatChannels.get();
     private final Map<String, ChatChannel> registry = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final ChannelLoader loader = new ChannelLoader(this);
 
@@ -31,12 +30,12 @@ public class ChatChannelRegistry implements Registry<ChatChannel> {
     public boolean register(@NonNull ChatChannel channel, boolean force) {
         String name = channel.name();
         if (!force && registry.containsKey(name)) {
-            Loggers.warn(ChatChannels.getInstance().getComponentLogger(), "Attempted to register already existing ChatChannel: " + name);
+            ChatChannels.getLogging().warn("Attempted to register already existing ChatChannel: " + name);
             return false;
         }
         registry.put(name, channel);
         plugin.reloadServerForCommands();
-        Loggers.info(ChatChannels.getInstance().getComponentLogger(), "Registered ChatChannel " + name);
+        ChatChannels.getLogging().info("Registered ChatChannel " + name);
         return true;
     }
 

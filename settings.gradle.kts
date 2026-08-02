@@ -7,7 +7,7 @@ dependencyResolutionManagement {
             library("paper-api", "io.papermc.paper:paper-api:26.1.1.build.+")
 
             // compileOnly dependencies
-            library("daisylib", "uk.firedev:DaisyLib:3.1-SNAPSHOT")
+            library("daisylib", "uk.firedev:DaisyLib:4.0-SNAPSHOT")
             library("luckperms", "net.luckperms:api:5.4")
 
             // implementation dependencies

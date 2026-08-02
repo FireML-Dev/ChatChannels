@@ -5,32 +5,48 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
+import com.mojang.brigadier.suggestion.Suggestions;
+import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.MessageComponentSerializer;
+import io.papermc.paper.command.brigadier.argument.CustomArgumentType;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
 import uk.firedev.chatchannels.api.ChatChannel;
 import uk.firedev.chatchannels.registry.ChatChannelRegistry;
-import uk.firedev.daisylib.command.argument.ArgumentBase;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.CompletableFuture;
 
-public class ChatChannelArgument implements ArgumentBase<ChatChannel, String> {
+public class ChatChannelArgument implements CustomArgumentType.Converted<ChatChannel, String> {
 
     private static final DynamicCommandExceptionType INVALID_CHANNEL = new DynamicCommandExceptionType(name ->
         MessageComponentSerializer.message().serialize(Component.text("Invalid Channel: " + name))
     );
 
-    @Override
-    public List<String> getSuggestions(@NonNull CommandContext<CommandSourceStack> ctx) {
-        if (!(ctx.getSource().getSender() instanceof Player player)) {
+    public List<String> getSuggestions(@NonNull CommandContext<?> ctx) {
+        if (!(ctx.getSource() instanceof CommandSourceStack stack)) {
+            return List.of();
+        }
+        if (!(stack.getSender() instanceof Player player)) {
             return List.of();
         }
         return ChatChannelRegistry.getInstance().getRegistry().values().stream()
             .filter(channel -> channel.hasAccess(player))
             .map(ChatChannel::name)
             .toList();
+    }
+
+    @NonNull
+    @Override
+    public <S> CompletableFuture<Suggestions> listSuggestions(@NonNull CommandContext<S> context, @NonNull SuggestionsBuilder builder) {
+        String remaining = builder.getRemainingLowerCase();
+        getSuggestions(context).stream()
+            .filter(name -> name.toLowerCase(Locale.ROOT).startsWith(remaining))
+            .forEach(builder::suggest);
+        return builder.buildFuture();
     }
 
     /**
@@ -42,7 +58,7 @@ public class ChatChannelArgument implements ArgumentBase<ChatChannel, String> {
      * @see #convert(Object, Object)
      */
     @Override
-    public ChatChannel convert(String nativeType) throws CommandSyntaxException {
+    public @NonNull ChatChannel convert(@NonNull String nativeType) throws CommandSyntaxException {
         ChatChannel channel = ChatChannelRegistry.getInstance().getChatChannel(nativeType);
         if (channel == null) {
             throw INVALID_CHANNEL.create(nativeType);

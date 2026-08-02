@@ -10,7 +10,7 @@ plugins {
 
 repositories {
     // For testing experimental DaisyLib features
-    //mavenLocal()
+    mavenLocal()
     mavenCentral()
     gradlePluginPortal()
     maven("https://repo.papermc.io/repository/maven-public/")
@@ -19,7 +19,8 @@ repositories {
 
 dependencies {
     compileOnly(libs.paper.api)
-    compileOnly(libs.daisylib)
+
+    paperLibrary(libs.daisylib)
 }
 
 group = "uk.firedev"
@@ -31,7 +32,7 @@ paper {
     name = project.name
     version = project.version.toString()
     main = "uk.firedev.chatchannels.ChatChannels"
-    apiVersion = "26.1"
+    apiVersion = "26.2"
     author = "FireML"
     description = project.description.toString()
 

@@ -14,14 +14,14 @@ import org.jspecify.annotations.NonNull;
 import uk.firedev.chatchannels.configs.MessageConfig;
 import uk.firedev.chatchannels.data.PlayerData;
 import uk.firedev.chatchannels.registry.ChatChannelRegistry;
-import uk.firedev.daisylib.addons.requirement.Requirement;
+import uk.firedev.daisylib.addons.requirement.RequirementChecker;
 import uk.firedev.daisylib.addons.requirement.RequirementData;
 import uk.firedev.daisylib.command.CommandUtils;
-import uk.firedev.daisylib.libs.messagelib.message.ComponentMessage;
-import uk.firedev.daisylib.libs.messagelib.message.ComponentSingleMessage;
-import uk.firedev.daisylib.libs.messagelib.replacer.Replacer;
+import uk.firedev.daisylib.messages.message.ComponentMessage;
+import uk.firedev.daisylib.messages.message.ComponentSingleMessage;
+import uk.firedev.daisylib.messages.replacer.Replacer;
 import uk.firedev.daisylib.registry.RegistryItem;
-import uk.firedev.daisylib.util.CooldownHelper;
+import uk.firedev.daisylib.utils.CooldownHelper;
 
 import java.util.List;
 
@@ -69,7 +69,7 @@ public interface ChatChannel extends RegistryItem {
     /**
      * @return The requirements to access this channel.
      */
-    @NonNull Requirement accessRequirement();
+    @NonNull RequirementChecker accessRequirement();
 
     /**
      * @return The chat format for this channel.
@@ -120,8 +120,8 @@ public interface ChatChannel extends RegistryItem {
         if (!isEnabled()) {
             return false;
         }
-        return accessRequirement().meetsRequirements(
-            new RequirementData().withPlayer(player)
+        return accessRequirement().check(
+            new RequirementData(player)
         );
     }
 

@@ -8,8 +8,8 @@ import org.jspecify.annotations.NonNull;
 import uk.firedev.chatchannels.ChatChannels;
 import uk.firedev.chatchannels.api.events.ChatChannelsChatEvent;
 import uk.firedev.chatchannels.configs.MessageConfig;
-import uk.firedev.daisylib.libs.messagelib.message.ComponentMessage;
-import uk.firedev.daisylib.libs.messagelib.message.ComponentSingleMessage;
+import uk.firedev.daisylib.messages.message.ComponentMessage;
+import uk.firedev.daisylib.messages.message.ComponentSingleMessage;
 
 import java.time.Duration;
 import java.util.Collection;
@@ -18,7 +18,7 @@ import java.util.List;
 public record Messaging(@NonNull ChatChannel channel) {
 
     public void sendMessage(@NonNull Player sender, @NonNull Component sentMessage, @NonNull ComponentSingleMessage message) {
-        Bukkit.getScheduler().runTask(ChatChannels.getInstance(), () -> {
+        Bukkit.getScheduler().runTask(ChatChannels.get(), () -> {
             ChatChannelsChatEvent ccce = new ChatChannelsChatEvent(channel, sender, sentMessage);
             // Event cancelled
             if (!ccce.callEvent()) {

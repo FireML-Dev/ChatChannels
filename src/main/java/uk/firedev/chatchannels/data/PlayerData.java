@@ -14,7 +14,7 @@ import uk.firedev.chatchannels.registry.ChatChannelRegistry;
 
 public record PlayerData(@NonNull Player player) {
 
-    private static final NamespacedKey CHANNEL_KEY = new NamespacedKey(ChatChannels.getInstance(), "channel");
+    private static final NamespacedKey CHANNEL_KEY = new NamespacedKey(ChatChannels.get(), "channel");
 
     @Override
     public @NonNull Player player() {

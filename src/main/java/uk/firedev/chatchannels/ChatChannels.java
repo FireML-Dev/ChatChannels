@@ -14,11 +14,12 @@ import uk.firedev.chatchannels.commands.MainCommand;
 import uk.firedev.chatchannels.configs.MainConfig;
 import uk.firedev.chatchannels.configs.MessageConfig;
 import uk.firedev.chatchannels.registry.ChatChannelRegistry;
-import uk.firedev.daisylib.util.Loggers;
+import uk.firedev.daisylib.logging.Logging;
 
 public final class ChatChannels extends JavaPlugin {
 
     private static ChatChannels INSTANCE;
+    private static Logging LOGGING;
 
     private boolean loading = true;
     private boolean allowServerReload = false;
@@ -28,13 +29,21 @@ public final class ChatChannels extends JavaPlugin {
             throw new UnsupportedOperationException(getClass().getName() + " has already been assigned!");
         }
         INSTANCE = this;
+        LOGGING = Logging.logging(this);
     }
 
-    public static @NonNull ChatChannels getInstance() {
+    public static @NonNull ChatChannels get() {
         if (INSTANCE == null) {
             throw new UnsupportedOperationException(ChatChannels.class.getSimpleName() + " has not been assigned!");
         }
         return INSTANCE;
+    }
+
+    public static @NonNull Logging getLogging() {
+        if (LOGGING == null) {
+            throw new UnsupportedOperationException(ChatChannels.class.getSimpleName() + " has not been assigned!");
+        }
+        return LOGGING;
     }
 
     @Override
@@ -77,13 +86,9 @@ public final class ChatChannels extends JavaPlugin {
         this.loading = false;
     }
 
-    public boolean isLoading() {
-        return this.loading;
-    }
-
     public void reloadServerForCommands() {
         if (allowServerReload && !loading) {
-            Loggers.info(getLogger(), "Reloading the server to register missing commands.");
+            getLogging().info("Reloading the server to register missing commands.");
             Bukkit.reloadData();
         }
     }
