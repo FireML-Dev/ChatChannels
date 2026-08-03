@@ -6,7 +6,6 @@ import uk.firedev.chatchannels.ChatChannels;
 import uk.firedev.chatchannels.api.ChatChannel;
 import uk.firedev.chatchannels.registry.ChatChannelRegistry;
 import uk.firedev.daisylib.config.BasicConfig;
-import uk.firedev.daisylib.config.ConfigBase;
 
 public class MainConfig extends BasicConfig {
 
@@ -14,11 +13,6 @@ public class MainConfig extends BasicConfig {
 
     public MainConfig() {
         super("config.yml", "config.yml", ChatChannels.get());
-    }
-
-    @Override
-    public boolean copyDefaults() {
-        return true;
     }
 
     public static @NonNull MainConfig getInstance() {

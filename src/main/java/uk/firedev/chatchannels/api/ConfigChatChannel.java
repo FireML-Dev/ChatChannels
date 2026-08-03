@@ -136,9 +136,4 @@ public class ConfigChatChannel extends BasicConfig implements ChatChannel {
         return this.persistent;
     }
 
-    @Override
-    public boolean copyDefaults() {
-        return true;
-    }
-
 }
