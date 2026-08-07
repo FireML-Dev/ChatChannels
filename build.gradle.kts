@@ -73,7 +73,7 @@ publishing {
             artifactId = rootProject.name
             version = project.version.toString()
 
-            from(components["java"])
+            from(components["shadow"])
         }
     }
 }
