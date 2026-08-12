@@ -7,6 +7,7 @@ import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -94,16 +95,24 @@ public interface ChatChannel extends RegistryItem {
     }
 
     default void sendMessage(@NonNull Player sender, @NonNull Component component) {
-        Component name = sender.name();
-        ComponentListMessage hover = nameHover();
-        if (hover != null) {
-            name = name.hoverEvent(HoverEvent.showText(hover.toSingleMessage().parsePlaceholderAPI(sender).get()));
-        }
-
+        Component name = processName(sender);
         ComponentSingleMessage message = format().parsePlaceholderAPI(sender)
             .replace("{name}", name)
             .replace(replacer(sender));
         new Messaging(this).sendMessage(sender, component, message);
+    }
+
+    default @NonNull Component processName(@NonNull Player player) {
+        Component name = player.name();
+        ComponentListMessage hover = nameHover(player);
+        if (hover != null) {
+            name = name.hoverEvent(HoverEvent.showText(hover.toSingleMessage().get()));
+        }
+        String click = nameClick(player);
+        if (click != null) {
+            name = name.clickEvent(ClickEvent.suggestCommand(click));
+        }
+        return name;
     }
 
     /**
@@ -185,9 +194,9 @@ public interface ChatChannel extends RegistryItem {
         registrar.register(command);
     }
 
-    default @Nullable ComponentListMessage nameHover() {
-        return null;
-    }
+    @Nullable ComponentListMessage nameHover(@NonNull Player player);
+
+    @Nullable String nameClick(@NonNull Player player);
 
     boolean persistent();
 

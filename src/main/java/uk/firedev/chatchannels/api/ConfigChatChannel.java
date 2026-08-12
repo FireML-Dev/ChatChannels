@@ -3,6 +3,7 @@ package uk.firedev.chatchannels.api;
 import net.kyori.adventure.sound.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import uk.firedev.daisylib.addons.requirement.RequirementChecker;
@@ -133,12 +134,21 @@ public class ConfigChatChannel extends BasicConfig implements ChatChannel {
     }
 
     @Override
-    public final @Nullable ComponentListMessage nameHover() {
+    public final @Nullable ComponentListMessage nameHover(@NonNull Player player) {
         List<String> strings = getConfig().getStringList("name-hover");
         if (strings.isEmpty()) {
             return null;
         }
-        return ComponentMessage.componentMessage(strings);
+        return ComponentMessage.componentMessage(strings).parsePlaceholderAPI(player);
+    }
+
+    @Override
+    public final @Nullable String nameClick(@NonNull Player player) {
+        String string = getConfig().getString("name-click");
+        if (string == null) {
+            return null;
+        }
+        return string.replace("{name}", player.getName());
     }
 
     @Override
