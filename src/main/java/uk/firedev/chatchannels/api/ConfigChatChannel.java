@@ -8,6 +8,7 @@ import org.jspecify.annotations.Nullable;
 import uk.firedev.daisylib.addons.requirement.RequirementChecker;
 import uk.firedev.daisylib.config.BasicConfig;
 import uk.firedev.daisylib.config.serializer.SoundSerializer;
+import uk.firedev.daisylib.messages.message.ComponentListMessage;
 import uk.firedev.daisylib.messages.message.ComponentMessage;
 import uk.firedev.daisylib.messages.message.ComponentSingleMessage;
 import uk.firedev.daisylib.messages.replacer.Replacer;
@@ -129,6 +130,15 @@ public class ConfigChatChannel extends BasicConfig implements ChatChannel {
     @Override
     public @NonNull List<String> aliases() {
         return commandAliases;
+    }
+
+    @Override
+    public final @Nullable ComponentListMessage nameHover() {
+        List<String> strings = getConfig().getStringList("name-hover");
+        if (strings.isEmpty()) {
+            return null;
+        }
+        return ComponentMessage.componentMessage(strings);
     }
 
     @Override

@@ -7,6 +7,7 @@ import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jspecify.annotations.Nullable;
@@ -17,6 +18,7 @@ import uk.firedev.chatchannels.registry.ChatChannelRegistry;
 import uk.firedev.daisylib.addons.requirement.RequirementChecker;
 import uk.firedev.daisylib.addons.requirement.RequirementData;
 import uk.firedev.daisylib.command.CommandUtils;
+import uk.firedev.daisylib.messages.message.ComponentListMessage;
 import uk.firedev.daisylib.messages.message.ComponentMessage;
 import uk.firedev.daisylib.messages.message.ComponentSingleMessage;
 import uk.firedev.daisylib.messages.replacer.Replacer;
@@ -92,8 +94,14 @@ public interface ChatChannel extends RegistryItem {
     }
 
     default void sendMessage(@NonNull Player sender, @NonNull Component component) {
+        Component name = sender.name();
+        ComponentListMessage hover = nameHover();
+        if (hover != null) {
+            name = name.hoverEvent(HoverEvent.showText(hover.toSingleMessage().parsePlaceholderAPI(sender).get()));
+        }
+
         ComponentSingleMessage message = format().parsePlaceholderAPI(sender)
-            .replace("{name}", sender.name())
+            .replace("{name}", name)
             .replace(replacer(sender));
         new Messaging(this).sendMessage(sender, component, message);
     }
@@ -175,6 +183,10 @@ public interface ChatChannel extends RegistryItem {
             })
             .build();
         registrar.register(command);
+    }
+
+    default @Nullable ComponentListMessage nameHover() {
+        return null;
     }
 
     boolean persistent();
