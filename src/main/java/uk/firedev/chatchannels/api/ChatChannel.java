@@ -16,19 +16,16 @@ import org.jspecify.annotations.NonNull;
 import uk.firedev.chatchannels.configs.MessageConfig;
 import uk.firedev.chatchannels.data.PlayerData;
 import uk.firedev.chatchannels.registry.ChatChannelRegistry;
-import uk.firedev.daisylib.addons.requirement.RequirementChecker;
-import uk.firedev.daisylib.addons.requirement.RequirementData;
 import uk.firedev.daisylib.command.CommandUtils;
 import uk.firedev.daisylib.messages.message.ComponentListMessage;
 import uk.firedev.daisylib.messages.message.ComponentMessage;
 import uk.firedev.daisylib.messages.message.ComponentSingleMessage;
 import uk.firedev.daisylib.messages.replacer.Replacer;
-import uk.firedev.daisylib.registry.RegistryItem;
 import uk.firedev.daisylib.utils.CooldownHelper;
 
 import java.util.List;
 
-public interface ChatChannel extends RegistryItem {
+public interface ChatChannel {
 
     /**
      * @return Whether this channel should be enabled or not.
@@ -39,10 +36,6 @@ public interface ChatChannel extends RegistryItem {
      * @return The name of this channel.
      */
     @NonNull String name();
-
-    default @NonNull String getKey() {
-        return name();
-    }
 
     /**
      * @return The plugin that owns this channel.
@@ -70,9 +63,10 @@ public interface ChatChannel extends RegistryItem {
     int pingCooldown();
 
     /**
-     * @return The requirements to access this channel.
+     * @return The permission to access this channel.
      */
-    @NonNull RequirementChecker accessRequirement();
+
+    @Nullable String accessPermission();
 
     /**
      * @return The chat format for this channel.
@@ -137,9 +131,8 @@ public interface ChatChannel extends RegistryItem {
         if (!isEnabled()) {
             return false;
         }
-        return accessRequirement().check(
-            new RequirementData(player)
-        );
+        String permission = accessPermission();
+        return permission == null || player.hasPermission(permission);
     }
 
     /**

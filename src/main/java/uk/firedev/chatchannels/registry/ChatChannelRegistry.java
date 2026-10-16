@@ -7,13 +7,12 @@ import uk.firedev.chatchannels.api.ChatChannel;
 import uk.firedev.chatchannels.api.ConfigChatChannel;
 import uk.firedev.chatchannels.channels.ChannelLoader;
 import uk.firedev.chatchannels.configs.MainConfig;
-import uk.firedev.daisylib.registry.Registry;
 
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class ChatChannelRegistry implements Registry<ChatChannel> {
+public class ChatChannelRegistry {
 
     private static final ChatChannelRegistry instance = new ChatChannelRegistry();
 
@@ -25,6 +24,10 @@ public class ChatChannelRegistry implements Registry<ChatChannel> {
 
     public static ChatChannelRegistry getInstance() {
         return instance;
+    }
+
+    public boolean register(@NonNull ChatChannel channel) {
+        return register(channel, false);
     }
 
     public boolean register(@NonNull ChatChannel channel, boolean force) {
@@ -39,12 +42,10 @@ public class ChatChannelRegistry implements Registry<ChatChannel> {
         return true;
     }
 
-    @Override
     public boolean isEmpty() {
         return registry.isEmpty();
     }
 
-    @Override
     public void clear() {
         registry.clear();
     }
@@ -82,18 +83,15 @@ public class ChatChannelRegistry implements Registry<ChatChannel> {
     }
 
     @Nullable
-    @Override
     public ChatChannel get(@NonNull String s) {
         return registry.get(s);
     }
 
-    @Override
     public boolean unregister(@NonNull String s) {
         return registry.remove(s) != null;
     }
 
     @NonNull
-    @Override
     public ChatChannel getOrDefault(@NonNull String s, @NonNull ChatChannel channel) {
         ChatChannel val = get(s);
         return val == null ? channel : val;

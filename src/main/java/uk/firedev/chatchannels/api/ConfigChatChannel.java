@@ -3,10 +3,8 @@ package uk.firedev.chatchannels.api;
 import net.kyori.adventure.sound.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
-import uk.firedev.daisylib.addons.requirement.RequirementChecker;
 import uk.firedev.daisylib.config.BasicConfig;
 import uk.firedev.daisylib.config.serializer.SoundSerializer;
 import uk.firedev.daisylib.messages.message.ComponentListMessage;
@@ -28,7 +26,6 @@ public class ConfigChatChannel extends BasicConfig implements ChatChannel {
     private final Plugin plugin;
     private final @NonNull String id;
     private final List<String> commandAliases;
-    private final @NonNull RequirementChecker accessRequirement;
     private final boolean persistent;
 
     public ConfigChatChannel(@NonNull File file, @NonNull Plugin plugin, boolean persistent) throws ChannelLoadException {
@@ -36,7 +33,6 @@ public class ConfigChatChannel extends BasicConfig implements ChatChannel {
         this.plugin = plugin;
         this.id = checkId();
         this.commandAliases = getConfig().getStringList("commands");
-        this.accessRequirement = new RequirementChecker(getConfig().getConfigurationSection("requirements"));
         this.persistent = persistent;
     }
 
@@ -45,7 +41,6 @@ public class ConfigChatChannel extends BasicConfig implements ChatChannel {
         this.plugin = plugin;
         this.id = checkId();
         this.commandAliases = getConfig().getStringList("commands");
-        this.accessRequirement = new RequirementChecker(getConfig().getConfigurationSection("requirements"));
         this.persistent = persistent;
     }
 
@@ -99,8 +94,8 @@ public class ConfigChatChannel extends BasicConfig implements ChatChannel {
     }
 
     @Override
-    public @NonNull RequirementChecker accessRequirement() {
-        return accessRequirement;
+    public @Nullable String accessPermission() {
+        return getConfig().getString("access-permission");
     }
 
     public @NonNull ComponentSingleMessage defaultFormat() {
