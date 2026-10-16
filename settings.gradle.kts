@@ -12,7 +12,7 @@ dependencyResolutionManagement {
             // implementation dependencies
 
             // paperLibrary dependencies
-            library("daisylib", "uk.firedev:DaisyLib:4.0-SNAPSHOT")
+            library("daisylib", "uk.firedev:DaisyLib:4.3-SNAPSHOT")
 
             // Gradle plugins
             plugin("shadow", "com.gradleup.shadow").version("9.2.2")

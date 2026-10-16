@@ -5,9 +5,9 @@ import org.jspecify.annotations.NonNull;
 import uk.firedev.chatchannels.ChatChannels;
 import uk.firedev.chatchannels.api.ChatChannel;
 import uk.firedev.chatchannels.registry.ChatChannelRegistry;
-import uk.firedev.daisylib.config.BasicConfig;
+import uk.firedev.daisylib.config.UpdatableConfig;
 
-public class MainConfig extends BasicConfig {
+public class MainConfig extends UpdatableConfig {
 
     private static final MainConfig instance = new MainConfig();
 
@@ -22,5 +22,15 @@ public class MainConfig extends BasicConfig {
     public @Nullable ChatChannel getInitialChannel() {
         return ChatChannelRegistry.getInstance().getChatChannel(getConfig().getString("initial-channel"));
     }
-    
+
+    @Override
+    public @NonNull Settings getUpdateSettings() {
+        return new Settings();
+    }
+
+    @Override
+    public @NonNull String versionKey() {
+        return "version";
+    }
+
 }

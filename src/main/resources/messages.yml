@@ -6,3 +6,6 @@ no-access: "{prefix}<red>You cannot access that channel!"
 no-longer-exists: "{prefix}<red>The channel you were in no longer exists."
 not-in-channel: "{prefix}<red>You are no longer in a chat channel."
 reloaded: "{prefix}<#F0E68C>Successfully reloaded the plugin."
+
+# Do not touch.
+version: 1

@@ -3,11 +3,11 @@ package uk.firedev.chatchannels.configs;
 import org.jspecify.annotations.NonNull;
 import uk.firedev.chatchannels.ChatChannels;
 import uk.firedev.chatchannels.api.ChatChannel;
-import uk.firedev.daisylib.config.BasicConfig;
+import uk.firedev.daisylib.config.UpdatableConfig;
 import uk.firedev.daisylib.messages.message.ComponentMessage;
 import uk.firedev.daisylib.messages.message.ComponentSingleMessage;
 
-public class MessageConfig extends BasicConfig {
+public class MessageConfig extends UpdatableConfig {
 
     private static final MessageConfig instance = new MessageConfig();
 
@@ -57,4 +57,13 @@ public class MessageConfig extends BasicConfig {
         return super.getComponentMessage(path, def).replace("{prefix}", getPrefix());
     }
 
+    @Override
+    public @NonNull Settings getUpdateSettings() {
+        return new Settings();
+    }
+
+    @Override
+    public @NonNull String versionKey() {
+        return "version";
+    }
 }

@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
-import uk.firedev.daisylib.config.BasicConfig;
+import uk.firedev.daisylib.config.StaticConfig;
 import uk.firedev.daisylib.config.serializer.SoundSerializer;
 import uk.firedev.daisylib.messages.message.ComponentListMessage;
 import uk.firedev.daisylib.messages.message.ComponentMessage;
@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * Used for fetching chat channels from the config files.
  */
-public class ConfigChatChannel extends BasicConfig implements ChatChannel {
+public class ConfigChatChannel extends StaticConfig implements ChatChannel {
 
     protected final CooldownHelper pingCooldown = CooldownHelper.cooldownHelper();
 
