@@ -5,6 +5,7 @@ import org.jspecify.annotations.NonNull;
 import uk.firedev.chatchannels.ChatChannels;
 import uk.firedev.chatchannels.api.ChatChannel;
 import uk.firedev.chatchannels.api.ConfigChatChannel;
+import uk.firedev.chatchannels.api.events.ChatChannelsRegistryReloadEvent;
 import uk.firedev.chatchannels.channels.ChannelLoader;
 import uk.firedev.chatchannels.configs.MainConfig;
 
@@ -58,6 +59,7 @@ public class ChatChannelRegistry {
     public void reload() {
         cleanRegistry();
         loader.loadChannels();
+        new ChatChannelsRegistryReloadEvent(this).callEvent();
     }
 
     private void cleanRegistry() {
