@@ -9,8 +9,7 @@ commands:
   - l
   - lc
 
-requirements:
-  - "PERMISSION:chatchannel.local"
+access-permission: "chatchannel.local"
 
 ping:
   enable: true

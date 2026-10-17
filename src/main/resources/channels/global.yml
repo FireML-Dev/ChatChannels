@@ -8,8 +8,7 @@ commands:
   - g
   - gc
 
-requirements:
-  - "PERMISSION:chatchannel.global"
+access-permission: "chatchannel.global"
 
 ping:
   enable: true

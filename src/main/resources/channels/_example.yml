@@ -16,10 +16,8 @@ commands:
   - exa
   - example
 
-# The requirements to access the channel.
-# See `/daisylib list requirementTypes` for valid requirements.
-requirements:
-  - "PERMISSION:chatchannel.example"
+# The permission required to access the channel.
+access-permission: "chatchannel.example"
 
 # Controls chat pinging
 ping:
