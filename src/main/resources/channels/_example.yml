@@ -27,7 +27,5 @@ ping:
   cooldown: 10
   # What sound should it make?
   # You can get the sound key from the /playsound command.
-  sound:
-    sound: entity.experience_orb.pickup
-    volume: 3
-    pitch: 1
+  # Format: sound,volume,pitch
+  sound: entity.experience_orb.pickup,3,1

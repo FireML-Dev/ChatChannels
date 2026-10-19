@@ -14,6 +14,4 @@ ping:
   enable: true
   cooldown: 10
   sound:
-    sound: entity.experience_orb.pickup
-    volume: 3
-    pitch: 1
+    sound: entity.experience_orb.pickup,3,1

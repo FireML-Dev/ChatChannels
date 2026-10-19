@@ -2,6 +2,7 @@ package uk.firedev.chatchannels.api;
 
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
@@ -65,7 +66,8 @@ public record Messaging(@NonNull ChatChannel channel) {
         }
         String pingFormat = "@" + player.getName();
         if (message.contains(pingFormat)) {
-            message = message.replace(pingFormat, "<red>@" + player.getName());
+            Component ping = Component.text("@" + player.getName(), NamedTextColor.RED);
+            message = message.edit(c -> c.replaceText(b -> b.matchLiteral(pingFormat).replacement(ping)));
             Sound pingSound = channel.pingSound();
             if (pingSound != null) {
                 player.playSound(pingSound);
