@@ -1,5 +1,6 @@
 package uk.firedev.chatchannels.data;
 
+import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -41,20 +42,22 @@ public record PlayerData(@NonNull Player player) {
     }
 
     public void setActiveChannel(@Nullable ChatChannel channel) {
-        ChatChannelsSwitchChannelEvent ccsce = new ChatChannelsSwitchChannelEvent(channel, getActiveChannel(), player);
-        if (!ccsce.callEvent()) {
-            return;
-        }
+        Bukkit.getScheduler().runTask(ChatChannels.get(), () -> {
+            ChatChannelsSwitchChannelEvent ccsce = new ChatChannelsSwitchChannelEvent(channel, getActiveChannel(), player);
+            if (!ccsce.callEvent()) {
+                return;
+            }
 
-        PersistentDataContainer pdc = player.getPersistentDataContainer();
-        if (channel == null) {
-            pdc.remove(CHANNEL_KEY);
-            MessageConfig.getInstance().getNotInChannelMessage().send(this.player);
-        } else {
-            pdc.set(CHANNEL_KEY, PersistentDataType.STRING, channel.name());
-            MessageConfig.getInstance().getJoinChannelMessage(channel).send(this.player);
-        }
-        player.updateCommands();
+            PersistentDataContainer pdc = player.getPersistentDataContainer();
+            if (channel == null) {
+                pdc.remove(CHANNEL_KEY);
+                MessageConfig.getInstance().getNotInChannelMessage().send(this.player);
+            } else {
+                pdc.set(CHANNEL_KEY, PersistentDataType.STRING, channel.name());
+                MessageConfig.getInstance().getJoinChannelMessage(channel).send(this.player);
+            }
+            player.updateCommands();
+        });
     }
 
     public void resetActiveChannel() {
