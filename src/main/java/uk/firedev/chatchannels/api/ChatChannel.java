@@ -5,6 +5,7 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.event.player.AsyncChatEvent;
+import io.papermc.paper.event.player.ChatEvent;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -78,7 +79,8 @@ public interface ChatChannel {
      */
     long radius();
 
-    default void handleEvent(@NonNull AsyncChatEvent event) {
+    @SuppressWarnings("deprecation") // See ChatListener for why we suppress this.
+    default void handleEvent(@NonNull ChatEvent event) {
         Player sender = event.getPlayer();
         if (!hasAccess(sender)) {
             MessageConfig.getInstance().getNoAccessMessage().send(sender);
