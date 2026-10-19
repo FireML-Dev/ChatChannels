@@ -13,5 +13,4 @@ access-permission: "chatchannel.global"
 ping:
   enable: true
   cooldown: 10
-  sound:
-    sound: entity.experience_orb.pickup,3,1
+  sound: entity.experience_orb.pickup,3,1
