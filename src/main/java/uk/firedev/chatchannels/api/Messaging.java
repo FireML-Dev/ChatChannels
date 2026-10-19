@@ -14,11 +14,14 @@ import uk.firedev.daisylib.messages.message.ComponentSingleMessage;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public record Messaging(@NonNull ChatChannel channel) {
 
+    private static final Pattern iPattern = Pattern.compile("\\[i]", Pattern.LITERAL);
+    private static final Pattern itemPattern = Pattern.compile("\\[item]", Pattern.LITERAL);
+
     public void sendMessage(@NonNull Player sender, @NonNull Component sentMessage, @NonNull ComponentSingleMessage message) {
-        Bukkit.getScheduler().runTask(ChatChannels.get(), () -> {
             ChatChannelsChatEvent ccce = new ChatChannelsChatEvent(channel, sender, sentMessage);
             // Event cancelled
             if (!ccce.callEvent()) {
@@ -27,8 +30,8 @@ public record Messaging(@NonNull ChatChannel channel) {
 
             Component hand = sender.getInventory().getItemInMainHand().displayName();
             ComponentSingleMessage sent = ComponentMessage.componentMessage(ccce.message())
-                .replace("[i]", hand)
-                .replace("[item]", hand);
+                .edit(c -> c.replaceText(b -> b.match(iPattern).replacement(hand)))
+                .edit(c -> c.replaceText(b -> b.match(itemPattern).replacement(hand)));
 
             message.replace("{message}", sent).send(Bukkit.getConsoleSender());
             handleRadius(sender).stream()
@@ -37,7 +40,6 @@ public record Messaging(@NonNull ChatChannel channel) {
                     Component msg = message.replace("{message}", processPing(player, sent)).get();
                     player.sendMessage(msg);
                 });
-        });
     }
 
     private Collection<? extends Player> handleRadius(@NonNull Player sender) {
